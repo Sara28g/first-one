@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_login/flutter_login.dart';
 
 void main() {
   runApp(const MyApp());
-}y
+}
 //sara
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -56,13 +58,11 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'اهلا وسهلا',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            Text("password:",style: TextStyle(fontSize: 20),),
+            TextField(
+              decoration: InputDecoration(border: OutlineInputBorder(),hintText: 'enteria search term'),
+            )
+
           ],
         ),
       ),
