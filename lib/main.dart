@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       title: 'sara',
       theme: ThemeData(
 
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey.shade200),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'sara'),
@@ -48,29 +48,54 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       appBar: AppBar(
+        title: Text('log-in',style: TextStyle(color:Colors.white,fontSize: 30,)),
 
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Colors.blueGrey.shade800,
 
-        title: Text(widget.title),
+
       ),
       body: Center(
-
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text("password:",style: TextStyle(fontSize: 20),),
-            TextField(
-              decoration: InputDecoration(border: OutlineInputBorder(),hintText: 'enteria search term'),
-            )
-
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      child: SquareText(),
       ),
     );
+
   }
 }
+class SquareText extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width:350,
+      height: 300,
+      decoration: BoxDecoration(color: Colors.blueGrey.shade200,
+    shape:
+    BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(20),
+    ),
+    child: Center(
+      child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children:[
+      Text("UserName or Email:",style: TextStyle(color:Colors.black,fontSize: 20,),textAlign: TextAlign.left , ),
+      SizedBox(width:300,
+          child:TextField(
+            decoration: InputDecoration(border: OutlineInputBorder(),hintText: 'UserName/Email',),
+
+          )
+      ),
+      Text("password:",style: TextStyle(color:Colors.black,fontSize: 20,),textAlign: TextAlign.left , ),
+      SizedBox(width:300,
+          child:TextField(
+            decoration: InputDecoration(border: OutlineInputBorder(),hintText: 'password',),
+    )
+    ),
+],
+          ),
+          ),
+    );
+
+  }
+}
+
+
+
