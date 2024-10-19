@@ -1,3 +1,4 @@
+import 'package:first_one/views/HomePageScreen.dart';
 import 'package:first_one/views/SingUpScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
@@ -91,6 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 20,
+
                   ),
                   textAlign: TextAlign.left,
                 ),
@@ -111,8 +113,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey.shade900),
 
                   ),
-                  onPressed: () {},
-                  child: Text(
+                  onPressed: () {
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                  builder: (context) => HomePageScreen(title: "Log In")),
+                  );
+                  },
+                  child: const Text(
                     "Log In",
                     style: TextStyle(
                       color: Colors.white,
@@ -135,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               const SingUpScreen(title: "new account")),
                     );
                   },
-                  child: Text(
+                  child: const Text(
                     "NEW ACCOUNT",
                     style: TextStyle(
                       color: Colors.white,

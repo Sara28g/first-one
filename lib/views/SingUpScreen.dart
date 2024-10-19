@@ -43,9 +43,9 @@ class SingUpScreenPageState extends State<SingUpScreen> {
        ),
         Column(
          mainAxisSize: MainAxisSize.min,
-       children:<Widget> [
-        SizedBox(height: 10),
-        Text(
+          children:<Widget> [
+        const SizedBox(height: 10),
+        const Text(
          "First Name:",
          style: TextStyle(
            color: Colors.black,
@@ -53,7 +53,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
          ),
          textAlign: TextAlign.left,
        ),
-         SizedBox(
+         const SizedBox(
            width: 300,
            child: TextField(
              decoration: InputDecoration(
@@ -61,9 +61,9 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                hintText: 'First Name',
              ),
            )),
-         SizedBox(height: 2),
+         const SizedBox(height: 2),
 
-         Text(
+         const Text(
          "Last Name:",
          style: TextStyle(
            color: Colors.black,
@@ -71,7 +71,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
          ),
          textAlign: TextAlign.left,
        ),
-        SizedBox(
+        const SizedBox(
            width: 300,
            child: TextField(
              decoration: InputDecoration(
@@ -79,9 +79,9 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                hintText: 'Last Name:',
              ),
            )),
-        SizedBox(height: 2),
+        const SizedBox(height: 2),
 
-        Text(
+        const Text(
          "UserName:",
          style: TextStyle(
            color: Colors.black,
@@ -89,7 +89,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
          ),
          textAlign: TextAlign.left,
        ),
-        SizedBox(
+        const SizedBox(
            width: 300,
            child: TextField(
              decoration: InputDecoration(
@@ -97,9 +97,9 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                hintText: 'UserName/Email',
              ),
            )),
-       SizedBox(height: 2),
+       const SizedBox(height: 2),
 
-       Text(
+       const Text(
          "Email:",
          style: TextStyle(
            color: Colors.black,
@@ -107,7 +107,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
          ),
          textAlign: TextAlign.left,
        ),
-       SizedBox(
+       const SizedBox(
            width: 300,
            child: TextField(
              decoration: InputDecoration(
@@ -115,9 +115,9 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                hintText: 'Email',
              ),
            )),
-       SizedBox(height: 2),
+       const SizedBox(height: 2),
 
-       Text(
+       const Text(
          " Password:",
          style: TextStyle(
            color: Colors.black,
@@ -125,7 +125,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
          ),
          textAlign: TextAlign.left,
        ),
-       SizedBox(
+       const SizedBox(
            width: 300,
            child: TextField(
              decoration: InputDecoration(
@@ -133,9 +133,9 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                hintText: 'Password',
              ),
            )),
-       SizedBox(height: 2),
+       const SizedBox(height: 2),
 
-       Text(
+       const Text(
          "Confirm Password:",
          style: TextStyle(
            color: Colors.black,
@@ -144,7 +144,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
          ),
          textAlign: TextAlign.left,
        ),
-       SizedBox(
+       const SizedBox(
            width: 300,
            child: TextField(
              decoration: InputDecoration(
@@ -162,7 +162,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
 
          ),
          onPressed: (){},
-         child: Text(" create",
+         child: const Text(" create",
            style: TextStyle(
              color: Colors.white,
              fontSize: 15,),
