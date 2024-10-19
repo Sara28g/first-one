@@ -1,3 +1,4 @@
+import 'package:first_one/views/SingUpScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 
@@ -44,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('log-in',
+        title: const Text('Log-In',
             style: TextStyle(
               color: Colors.white,
               fontSize: 30,
@@ -52,66 +53,97 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.blueGrey.shade800,
       ),
       body: Center(
-        child: SquareText(),
-      ),
-    );
-  }
-}
-
-class SquareText extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 350,
-      height: 300,
-      decoration: BoxDecoration(
-        color: Colors.blueGrey.shade200,
-        shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "UserName or Email:",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 20,
+        child: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            Container(
+              width: 350,
+              height: 325,
+              decoration: BoxDecoration(
+                color: Colors.blueGrey.shade200,
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(20),
               ),
-              textAlign: TextAlign.left,
             ),
-            SizedBox(
-                width: 300,
-                child: TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'UserName/Email',
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const Text(
+                  "UserName or Email:",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
                   ),
-                )),
-            Text(
-              "password:",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-              ),
-              textAlign: TextAlign.left,
-            ),
-            SizedBox(
-                width: 300,
-                child: TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'password',
-                  ),
-                )),
-            TextButton(
-              style: const ButtonStyle(
-                // foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
+                  textAlign: TextAlign.left,
+                ),
+                const SizedBox(
+                    width: 300,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'UserName/Email',
+                      ),
+                    )),
+                const SizedBox(height: 2),
 
-              ),
-              onPressed: () { },
-              child: const Text('dont have an account sing up'),
+                const Text(
+                  "password:",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+                const SizedBox(
+                    width: 300,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'password',
+                      ),
+                    )),
+                const SizedBox(height: 10),
+
+                TextButton(
+                  style: ButtonStyle(
+                    foregroundColor: MaterialStateProperty.all<Color>(
+                        Colors.white),
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey.shade900),
+
+                  ),
+                  onPressed: () {},
+                  child: Text(
+                    "Log In",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  style: ButtonStyle(
+                    foregroundColor: MaterialStateProperty.all<Color>(
+                        Colors.white),
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey.shade900),
+
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const SingUpScreen(title: "new account")),
+                    );
+                  },
+                  child: Text(
+                    "NEW ACCOUNT",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+              ],
             )
           ],
         ),
