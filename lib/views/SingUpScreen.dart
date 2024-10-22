@@ -12,12 +12,14 @@ class SingUpScreen extends StatefulWidget {
 }
 
 class SingUpScreenPageState extends State<SingUpScreen> {
+
   void _incrementCounter() {}
-  final _txtUserName = TextEditingController();
-  final _txtFirstName = TextEditingController();
-  final _txtLastName = TextEditingController();
-  final _txtEmail = TextEditingController();
-  final _txtPassword = TextEditingController();
+  final _txtUserName = new TextEditingController();
+  final _txtFirstName =  TextEditingController();
+  final _txtLastName = new TextEditingController();
+  final _txtEmail = new TextEditingController();
+  final _txtPassword = new TextEditingController();
+  final _txtComfirmPassword = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +57,10 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                   ),
                   textAlign: TextAlign.left,
                 ),
-                const SizedBox(
+                 SizedBox(
                     width: 300,
                     child: TextField(
+                      controller: _txtFirstName,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'First Name',
@@ -72,10 +75,11 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                   ),
                   textAlign: TextAlign.left,
                 ),
-                const SizedBox(
+                SizedBox(
                     width: 300,
                     child: TextField(
-                      decoration: InputDecoration(
+                      controller: _txtLastName,
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Last Name:',
                       ),
@@ -89,12 +93,13 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                   ),
                   textAlign: TextAlign.left,
                 ),
-                const SizedBox(
+                SizedBox(
                     width: 300,
                     child: TextField(
+                      controller: _txtUserName,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
-                        hintText: 'UserName/Email',
+                        hintText: 'UserName',
                       ),
                     )),
                 const SizedBox(height: 2),
@@ -106,9 +111,10 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                   ),
                   textAlign: TextAlign.left,
                 ),
-                const SizedBox(
+                 SizedBox(
                     width: 300,
                     child: TextField(
+                      controller: _txtEmail,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Email',
@@ -123,9 +129,10 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                   ),
                   textAlign: TextAlign.left,
                 ),
-                const SizedBox(
+                 SizedBox(
                     width: 300,
                     child: TextField(
+                        controller:  _txtPassword,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Password',
@@ -140,9 +147,10 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                   ),
                   textAlign: TextAlign.left,
                 ),
-                const SizedBox(
+                 SizedBox(
                     width: 300,
                     child: TextField(
+                      controller: _txtComfirmPassword,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Confirm Password:',
@@ -164,6 +172,38 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                               const HomePageScreen(title: "Log In")),
                     );
                   },
+                  child: const Text(
+                    " create",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  style: ButtonStyle(
+                    foregroundColor:
+                    MaterialStateProperty.all<Color>(Colors.white),
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Colors.blueGrey.shade900),
+                  ),
+                  onPressed: () => showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text('AlertDialog Title'),
+                      content:  Text(_txtFirstName.text + "-" + _txtUserName.text) ,
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'Cancel'),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'OK'),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
+                  ),
                   child: const Text(
                     " create",
                     style: TextStyle(

@@ -33,9 +33,33 @@ class MyHomePage extends StatefulWidget {
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
-
+class SingUpScreenPageState extends State<SingUpScreen> {
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () => showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Warning'),
+          content: const Text('warning'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'forgot password'),
+              child: const Text('forgot password'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'OK'),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      ),
+      child: const Text('Warning'),
+    );
+  }
+}
 class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _controller = TextEditingController();
+
 
   int _counter = 0;
 
@@ -118,23 +142,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey.shade900),
 
                   ),
-                  onPressed: () => showDialog<String>(
-                    context: context,
-                    builder: (BuildContext context) => AlertDialog(
-                      title: const Text('WARNING'),
-                      content: const Text('wrong password'),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, 'Cancel'),
-                          child: const Text('forgot password'),
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, 'OK'),
-                          child: const Text('OK'),
-                        ),
-                      ],
-                    ),
-                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                          const HomePageScreen(title: "Log In")),
+
+                    );
+                  },
                   child: const Text(
                     "Log in",
                     style: TextStyle(
