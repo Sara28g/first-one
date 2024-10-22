@@ -1,3 +1,4 @@
+import 'package:first_one/views/EditProfile.dart';
 import 'package:first_one/views/HomePageScreen.dart';
 import 'package:first_one/views/SingUpScreen.dart';
 import 'package:flutter/material.dart';
@@ -151,6 +152,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                 ),
+
+
+
+
               ],
             )
           ],

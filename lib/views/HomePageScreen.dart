@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-
-
+import 'EditProfile.dart';
 
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key, required this.title});
@@ -13,8 +12,7 @@ class HomePageScreen extends StatefulWidget {
 }
 
 class HomepagescreenPageState extends State<HomePageScreen> {
-  void _incrementCounter() {
-  }
+  void _incrementCounter() {}
 
   @override
   Widget build(BuildContext context) {
@@ -31,33 +29,49 @@ class HomepagescreenPageState extends State<HomePageScreen> {
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
-
-            Container(
-              width: 100,
-              height:100,
-              decoration: BoxDecoration(
-                color: Colors.blueGrey.shade200,
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
+          Container(
+          width: 150,
+          height: 150,
+          decoration: BoxDecoration(
+            color: Colors.blueGrey.shade200,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
             TextButton(
-              style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey.shade900),
-
-              ),
-              onPressed: (){},
-              child: const Text("play",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,),
-              ),
-            ),
+                style: ButtonStyle(
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      Colors.blueGrey.shade900),
+                ),
+                onPressed: () {},
+                child: Icon(Icons.play_arrow_outlined)),
+            const SizedBox(height: 10),
+            TextButton(
+                style: ButtonStyle(
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      Colors.blueGrey.shade900),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            const EditProfile(title: "new account")),
+                  );
+                },
+                child: Icon(Icons.account_circle_outlined))
+  ],
+        )
           ],
         ),
       ),
-
     );
   }
 }
