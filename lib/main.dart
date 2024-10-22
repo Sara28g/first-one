@@ -35,6 +35,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final TextEditingController _controller = TextEditingController();
+
   int _counter = 0;
 
   void _incrementCounter() {
@@ -78,10 +80,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   textAlign: TextAlign.left,
                 ),
-                const SizedBox(
+                SizedBox(
                     width: 300,
                     child: TextField(
-                      decoration: InputDecoration(
+                      controller: _controller,
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'UserName/Email',
                       ),
@@ -96,6 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                   ),
                   textAlign: TextAlign.left,
+
                 ),
                 const SizedBox(
                     width: 300,
@@ -114,13 +118,33 @@ class _MyHomePageState extends State<MyHomePage> {
                     backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey.shade900),
 
                   ),
-                  onPressed: () {
-                  Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                  builder: (context) => HomePageScreen(title: "Log In")),
-                  );
-                  },
+                  onPressed: () => showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text('WARNING'),
+                      content: const Text('wrong password'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'Cancel'),
+                          child: const Text('forgot password'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'OK'),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  child: const Text(
+                    "Log in",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+
+                  /*
                   child: const Text(
                     "Log In",
                     style: TextStyle(
@@ -129,6 +153,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                 ),
+
+                   */
                 TextButton(
                   style: ButtonStyle(
                     foregroundColor: MaterialStateProperty.all<Color>(
@@ -137,6 +163,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                   ),
                   onPressed: () {
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -162,5 +189,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+
   }
 }

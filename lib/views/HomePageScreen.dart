@@ -49,7 +49,7 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                       Colors.blueGrey.shade900),
                 ),
                 onPressed: () {},
-                child: Icon(Icons.play_arrow_outlined)),
+                child: const Icon(Icons.play_arrow_outlined)),
             const SizedBox(height: 10),
             TextButton(
                 style: ButtonStyle(
@@ -66,7 +66,7 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                             const EditProfile(title: "new account")),
                   );
                 },
-                child: Icon(Icons.account_circle_outlined))
+                child: const Icon(Icons.account_circle_outlined))
   ],
         )
           ],

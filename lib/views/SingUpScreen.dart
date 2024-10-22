@@ -13,6 +13,11 @@ class SingUpScreen extends StatefulWidget {
 
 class SingUpScreenPageState extends State<SingUpScreen> {
   void _incrementCounter() {}
+  final _txtUserName = TextEditingController();
+  final _txtFirstName = TextEditingController();
+  final _txtLastName = TextEditingController();
+  final _txtEmail = TextEditingController();
+  final _txtPassword = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +161,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              HomePageScreen(title: "Log In")),
+                              const HomePageScreen(title: "Log In")),
                     );
                   },
                   child: const Text(

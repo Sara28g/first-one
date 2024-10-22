@@ -13,6 +13,8 @@ class EditProfile extends StatefulWidget {
 }
 
 class EditProfilePageState extends State<EditProfile> {
+  get actions => null;
+
   void _incrementCounter() {
   }
 
@@ -42,9 +44,13 @@ class EditProfilePageState extends State<EditProfile> {
               ),
             ),
             const Column(
+
               mainAxisSize: MainAxisSize.min,
               children:<Widget> [
+
                 SizedBox(height: 10),
+
+
                 Text(
                   "First Name:",
                   style: TextStyle(
@@ -63,7 +69,6 @@ class EditProfilePageState extends State<EditProfile> {
                     )),
 
                 SizedBox(height: 10),
-
 
 
               ],
