@@ -1,3 +1,4 @@
+import 'package:first_one/Utils/Utils.dart';
 import 'package:flutter/material.dart';
 
 import 'HomePageScreen.dart';
@@ -157,7 +158,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                       ),
                     )),
                 const SizedBox(height: 10),
-                /*
+
                 TextButton(
                   style: ButtonStyle(
                     foregroundColor:
@@ -166,6 +167,8 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                         Colors.blueGrey.shade900),
                   ),
                   onPressed: () {
+                    var uti = new Utils();
+                    uti.showMyDialog(context, _txtFirstName.text, _txtLastName.text);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -182,40 +185,9 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                   ),
                 ),
 
-                 */
 
-                TextButton(
-                  style: ButtonStyle(
-                    foregroundColor:
-                    MaterialStateProperty.all<Color>(Colors.white),
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        Colors.blueGrey.shade900),
-                  ),
-                  onPressed: () => showDialog<String>(
-                    context: context,
-                    builder: (BuildContext context) => AlertDialog(
-                      title: const Text('WORNNING'),
-                      content:  Text(_txtFirstName.text + "Wrong Password" + _txtUserName.text) ,
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, 'OK'),
-                          child: const Text('OK'),
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, 'Forgot Password'),
-                          child: const Text('Forgot Password'),
-                        ),
-                      ],
-                    ),
-                  ),
-                  child: const Text(
-                    "create",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
+
+
               ],
             )
           ],
