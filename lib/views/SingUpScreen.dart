@@ -38,7 +38,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
           children: <Widget>[
             Container(
               width: 350,
-              height: 625,
+              height: 650,
               decoration: BoxDecoration(
                 color: Colors.blueGrey.shade200,
                 shape: BoxShape.rectangle,
@@ -157,6 +157,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                       ),
                     )),
                 const SizedBox(height: 10),
+                /*
                 TextButton(
                   style: ButtonStyle(
                     foregroundColor:
@@ -180,6 +181,9 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                     ),
                   ),
                 ),
+
+                 */
+
                 TextButton(
                   style: ButtonStyle(
                     foregroundColor:
@@ -190,22 +194,22 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                   onPressed: () => showDialog<String>(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
-                      title: const Text('AlertDialog Title'),
-                      content:  Text(_txtFirstName.text + "-" + _txtUserName.text) ,
+                      title: const Text('WORNNING'),
+                      content:  Text(_txtFirstName.text + "Wrong Password" + _txtUserName.text) ,
                       actions: <Widget>[
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, 'Cancel'),
-                          child: const Text('Cancel'),
-                        ),
                         TextButton(
                           onPressed: () => Navigator.pop(context, 'OK'),
                           child: const Text('OK'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'Forgot Password'),
+                          child: const Text('Forgot Password'),
                         ),
                       ],
                     ),
                   ),
                   child: const Text(
-                    " create",
+                    "create",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 15,
