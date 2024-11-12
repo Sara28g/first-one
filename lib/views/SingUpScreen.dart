@@ -1,6 +1,6 @@
 import 'package:first_one/Utils/Utils.dart';
 import 'package:flutter/material.dart';
-
+import 'package:first_one/Utils/db.dart';
 import 'HomePageScreen.dart';
 
 class SingUpScreen extends StatefulWidget {
@@ -174,6 +174,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                   ),
                   onPressed: () {
                     var uti = new Utils();
+                    insertUser(_txtFirstName.text,_txtLastName,_txtPassword);
                     uti.showMyDialog(context, "YOUR ACCOUNT HAS BEEN CREATED", "",HomePageScreen(title: '',));
                   /*  Navigator.push(
                       context,

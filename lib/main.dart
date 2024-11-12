@@ -2,7 +2,6 @@ import 'package:first_one/views/EditProfile.dart';
 import 'package:first_one/views/HomePageScreen.dart';
 import 'package:first_one/views/SingUpScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_login/flutter_login.dart';
 
 void main() {
   runApp(const MyApp());
