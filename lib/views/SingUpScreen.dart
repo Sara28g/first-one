@@ -60,13 +60,19 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                 ),
                  SizedBox(
                     width: 300,
-                    child: TextField(
-                      controller: _txtFirstName,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'First Name',
-                      ),
-                    )),
+                       child: TextField(
+                           controller: _txtFirstName,
+                           decoration: InputDecoration(
+                             border: OutlineInputBorder(),
+                             hintText: 'First Name',
+                           ),
+                       ),
+                     ),
+                 
+
+
+
+
                 const SizedBox(height: 2),
                 const Text(
                   "Last Name:",
@@ -168,13 +174,15 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                   ),
                   onPressed: () {
                     var uti = new Utils();
-                    uti.showMyDialog(context, _txtFirstName.text, _txtLastName.text);
-                    Navigator.push(
+                    uti.showMyDialog(context, "YOUR ACCOUNT HAS BEEN CREATED", "",HomePageScreen(title: '',));
+                  /*  Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
                               const HomePageScreen(title: "Log In")),
                     );
+
+                   */
                   },
                   child: const Text(
                     " create",
