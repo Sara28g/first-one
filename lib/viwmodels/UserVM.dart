@@ -1,4 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
 
-class UserVM extends ChangeNotifier{}
+class UserVM extends ChangeNotifier{
+
+}
