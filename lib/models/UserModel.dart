@@ -1,16 +1,19 @@
 class User{
 
+  int UserID;
   String username;
-  String name;
+  String Firstname;
+  String Lastname;
   String phone;
-  String note;
   String email;
 
   User({
+
+    this.UserID=0,
     this.username="",
-    this.name="",
+    this.Firstname="",
+    this.Lastname="",
     this.phone="",
-    this.note="",
     this.email="",
 
   });
@@ -18,18 +21,20 @@ class User{
 
   factory User.fromJson(Map<String,dynamic>  json)=>User(
     username: json ["username"],
-    name: json ["name"],
+    Firstname: json ["Firstname"],
+    Lastname: json ["Lastname"],
     phone: json ["phone"],
-    note: json ["note"],
+    UserID: json ["UserID"],
     email: json ["email"],
 
 
   );
   Map<String,dynamic> toJson() => {
     "username": username,
-    "name" :name,
+    "Firstname" :Firstname,
+    "Lastname" :Lastname,
     "phone" :phone,
-    "note":note,
+    "UserID":UserID,
     "email":email,
 
   };
