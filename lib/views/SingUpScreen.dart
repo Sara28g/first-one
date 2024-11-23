@@ -13,10 +13,9 @@ class SingUpScreen extends StatefulWidget {
 }
 
 class SingUpScreenPageState extends State<SingUpScreen> {
-
   void _incrementCounter() {}
   final _txtUserName = new TextEditingController();
-  final _txtFirstName =  TextEditingController();
+  final _txtFirstName = TextEditingController();
   final _txtLastName = new TextEditingController();
   final _txtEmail = new TextEditingController();
   final _txtPassword = new TextEditingController();
@@ -58,21 +57,16 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                   ),
                   textAlign: TextAlign.left,
                 ),
-                 SizedBox(
-                    width: 300,
-                       child: TextField(
-                           controller: _txtFirstName,
-                           decoration: InputDecoration(
-                             border: OutlineInputBorder(),
-                             hintText: 'First Name',
-                           ),
-                       ),
-                     ),
-                 
-
-
-
-
+                SizedBox(
+                  width: 300,
+                  child: TextField(
+                    controller: _txtFirstName,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'First Name',
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 2),
                 const Text(
                   "Last Name:",
@@ -118,7 +112,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                   ),
                   textAlign: TextAlign.left,
                 ),
-                 SizedBox(
+                SizedBox(
                     width: 300,
                     child: TextField(
                       controller: _txtEmail,
@@ -136,10 +130,10 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                   ),
                   textAlign: TextAlign.left,
                 ),
-                 SizedBox(
+                SizedBox(
                     width: 300,
                     child: TextField(
-                        controller:  _txtPassword,
+                      controller: _txtPassword,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Password',
@@ -154,7 +148,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                   ),
                   textAlign: TextAlign.left,
                 ),
-                 SizedBox(
+                SizedBox(
                     width: 300,
                     child: TextField(
                       controller: _txtComfirmPassword,
@@ -164,7 +158,6 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                       ),
                     )),
                 const SizedBox(height: 10),
-
                 TextButton(
                   style: ButtonStyle(
                     foregroundColor:
@@ -174,16 +167,23 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                   ),
                   onPressed: () {
                     var uti = new Utils();
-                    insertUser(_txtFirstName.text,_txtLastName,_txtPassword);
-                    uti.showMyDialog(context, "YOUR ACCOUNT HAS BEEN CREATED", "",HomePageScreen(title: '',));
-                  /*  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              const HomePageScreen(title: "Log In")),
-                    );
-
-                   */
+                    insertUser(_txtFirstName.text, _txtLastName, _txtPassword);
+                    if (_txtFirstName.text.trim().isEmpty) {
+                      uti.showMyDialog(
+                          context,
+                          "YOUR MUST FILL ALL BOXES",
+                          "",
+                          SingUpScreen(
+                            title: '',
+                          ));
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const HomePageScreen(title: "Log In")),
+                      );
+                    }
                   },
                   child: const Text(
                     " create",
@@ -193,10 +193,6 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                     ),
                   ),
                 ),
-
-
-
-
               ],
             )
           ],
