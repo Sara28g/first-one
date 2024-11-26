@@ -1,6 +1,7 @@
 import 'package:first_one/Utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:first_one/Utils/db.dart';
+import '../models/UserModel.dart';
 import 'HomePageScreen.dart';
 
 class SingUpScreen extends StatefulWidget {
@@ -20,6 +21,31 @@ class SingUpScreenPageState extends State<SingUpScreen> {
   final _txtEmail = new TextEditingController();
   final _txtPassword = new TextEditingController();
   final _txtComfirmPassword = new TextEditingController();
+
+  void insertUserFunc()
+  {
+  if (_txtFirstName.text.trim().isEmpty) {
+    var uti = new Utils();
+    uti.showMyDialog(context, "YOUR MUST FILL ALL BOXES", "", SingUpScreen(title: '',));
+  }
+  else
+    {
+      var user = new User();
+  user.Firstname=_txtFirstName.text;
+  user.Lastname=_txtLastName.text;
+  user.password=int.parse(_txtPassword.text);
+  user.email=_txtEmail.text;
+  insertUser(user);
+  var uti =new Utils();
+  uti.showMyDialog(context, "success", "you registed successfully", HomePageScreen(title: ""),
+  );
+  _txtFirstName.text = "";
+  _txtLastName.text = "";
+  _txtPassword.text="";
+  _txtEmail.text="";
+
+  }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -166,25 +192,14 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                         Colors.blueGrey.shade900),
                   ),
                   onPressed: () {
-                    var uti = new Utils();
-                    insertUser(_txtFirstName.text, _txtLastName, _txtPassword);
-                    if (_txtFirstName.text.trim().isEmpty) {
-                      uti.showMyDialog(
-                          context,
-                          "YOUR MUST FILL ALL BOXES",
-                          "",
-                          SingUpScreen(
-                            title: '',
-                          ));
-                    } else {
+                      insertUserFunc();
                       Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const HomePageScreen(title: "Log In")),
-                      );
-                    }
-                  },
+                          context,
+                          MaterialPageRoute(
+                          builder: (context) =>
+                      const HomePageScreen(title: "Log In")),);
+                    },
+
                   child: const Text(
                     " create",
                     style: TextStyle(

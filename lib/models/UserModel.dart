@@ -4,7 +4,7 @@ class User{
   String username;
   String Firstname;
   String Lastname;
-  String phone;
+  int password;
   String email;
 
   User({
@@ -13,7 +13,7 @@ class User{
     this.username="",
     this.Firstname="",
     this.Lastname="",
-    this.phone="",
+    this.password=0,
     this.email="",
 
   });
@@ -23,7 +23,7 @@ class User{
     username: json ["username"],
     Firstname: json ["Firstname"],
     Lastname: json ["Lastname"],
-    phone: json ["phone"],
+    password: json ["password"],
     UserID: json ["UserID"],
     email: json ["email"],
 
@@ -33,7 +33,7 @@ class User{
     "username": username,
     "Firstname" :Firstname,
     "Lastname" :Lastname,
-    "phone" :phone,
+    "password" :password,
     "UserID":UserID,
     "email":email,
 
