@@ -2,7 +2,9 @@
 import 'package:flutter/material.dart';
 
 class Utils{
-  Future<void> showMyDialog(context,title,content, Widget screen) async{
+
+  // type=screen;info;
+  Future<void> showMyDialog(context,title,content, type, Widget screen) async{
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -21,13 +23,21 @@ class Utils{
             TextButton(
               child: const Text("ok"),
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                    builder: (context) =>
-                screen),
-              //Navigator.of(context).pop();
-        );
+                if(type == "screen")
+                  {
+                    Navigator.of(context).pop();
+
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                            screen), );
+                  }
+                else
+                  {
+                    Navigator.of(context).pop();
+                  }
+
               },
 
 

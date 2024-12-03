@@ -16,33 +16,41 @@ class SingUpScreen extends StatefulWidget {
 class SingUpScreenPageState extends State<SingUpScreen> {
   void _incrementCounter() {}
   final _txtUserName = new TextEditingController();
-  final _txtFirstName = TextEditingController();
-  final _txtLastName = new TextEditingController();
+  final _txtfirstName = TextEditingController();
+  final _txtlastName = new TextEditingController();
   final _txtEmail = new TextEditingController();
-  final _txtPassword = new TextEditingController();
+  final _txtpassword = new TextEditingController();
   final _txtComfirmPassword = new TextEditingController();
 
   void insertUserFunc()
-  {
-  if (_txtFirstName.text.trim().isEmpty) {
-    var uti = new Utils();
-    uti.showMyDialog(context, "YOUR MUST FILL ALL BOXES", "", SingUpScreen(title: '',));
-  }
-  else
+    {
+      if (_txtfirstName.text.trim().isEmpty) {
+          var uti = new Utils();
+         uti.showMyDialog(context, "required", "YOUR MUST FILL ALL BOXES", "info", SingUpScreen(title: '',),);
+    }
+      else
     {
       var user = new User();
-  user.Firstname=_txtFirstName.text;
-  user.Lastname=_txtLastName.text;
-  user.password=int.parse(_txtPassword.text);
-  user.email=_txtEmail.text;
-  insertUser(user);
-  var uti =new Utils();
-  uti.showMyDialog(context, "success", "you registed successfully", HomePageScreen(title: ""),
-  );
-  _txtFirstName.text = "";
-  _txtLastName.text = "";
-  _txtPassword.text="";
-  _txtEmail.text="";
+       user.firstName=_txtfirstName.text;
+       user.lastName=_txtlastName.text;
+       user.password=_txtpassword.text;
+       user.Email=_txtEmail.text;
+      insertUser(user);
+
+       var uti =new Utils();
+       uti.showMyDialog(context, "success", "you registed successfully", "screen", HomePageScreen(title: ""), );
+
+      // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //       builder: (context) =>
+          //       const HomePageScreen(title: "Log In")),);
+/*
+       _txtFirstName.text = "";
+       _txtLastName.text = "";
+      _txtPassword.text="";
+      _txtEmail.text="";
+*/
 
   }
   }
@@ -86,7 +94,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                 SizedBox(
                   width: 300,
                   child: TextField(
-                    controller: _txtFirstName,
+                    controller: _txtfirstName,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: 'First Name',
@@ -105,7 +113,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                 SizedBox(
                     width: 300,
                     child: TextField(
-                      controller: _txtLastName,
+                      controller: _txtlastName,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Last Name:',
@@ -159,7 +167,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                 SizedBox(
                     width: 300,
                     child: TextField(
-                      controller: _txtPassword,
+                      controller: _txtpassword,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Password',
@@ -193,11 +201,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                   ),
                   onPressed: () {
                       insertUserFunc();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                          builder: (context) =>
-                      const HomePageScreen(title: "Log In")),);
+
                     },
 
                   child: const Text(
