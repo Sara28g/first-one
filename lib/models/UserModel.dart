@@ -1,6 +1,6 @@
 class User{
 
-  int UserID;
+  int userID;
   String username;
   String firstName;
   String lastName;
@@ -9,7 +9,7 @@ class User{
 
   User({
 
-    this.UserID=0,
+    this.userID=0,
     this.username="",
     this.firstName="",
     this.lastName="",
@@ -24,7 +24,7 @@ class User{
     firstName: json ["firstName"],
     lastName: json ["lastName"],
     password: json ["password"],
-    UserID: json ["UserID"],
+    userID: json ["userID"],
     Email: json ["Email"],
 
 
@@ -34,7 +34,7 @@ class User{
     "firstName" :firstName,
     "lastName" :lastName,
     "password" :password,
-    "UserID":UserID,
+    "userID":userID,
     "email":Email,
 
   };

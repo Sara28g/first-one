@@ -15,12 +15,12 @@ class SingUpScreen extends StatefulWidget {
 
 class SingUpScreenPageState extends State<SingUpScreen> {
   void _incrementCounter() {}
-  final _txtUserName = new TextEditingController();
+  final _txtUserName =  TextEditingController();
   final _txtfirstName = TextEditingController();
-  final _txtlastName = new TextEditingController();
-  final _txtEmail = new TextEditingController();
-  final _txtpassword = new TextEditingController();
-  final _txtComfirmPassword = new TextEditingController();
+  final _txtLastName =  TextEditingController();
+  final _txtEmail =  TextEditingController();
+  final _txtPassword =  TextEditingController();
+  final _txtComfirmPassword =  TextEditingController();
 
   void insertUserFunc()
     {
@@ -31,14 +31,16 @@ class SingUpScreenPageState extends State<SingUpScreen> {
       else
     {
       var user = new User();
-       user.firstName=_txtfirstName.text;
-       user.lastName=_txtlastName.text;
-       user.password=_txtpassword.text;
-       user.Email=_txtEmail.text;
+      user.firstName = _txtfirstName.text;
+      user.lastName = _txtLastName.text;
+      user.password = _txtPassword.text;
+      user.Email = _txtEmail.text;
+      user.username = _txtUserName.text;
+
       insertUser(user);
 
-       var uti =new Utils();
-       uti.showMyDialog(context, "success", "you registed successfully", "screen", HomePageScreen(title: ""), );
+       // var uti =new Utils();
+       // uti.showMyDialog(context, "success", "you registed successfully", "screen", HomePageScreen(title: ""), );
 
       // Navigator.push(
           //   context,
@@ -113,7 +115,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                 SizedBox(
                     width: 300,
                     child: TextField(
-                      controller: _txtlastName,
+                      controller: _txtLastName,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Last Name:',
@@ -167,7 +169,8 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                 SizedBox(
                     width: 300,
                     child: TextField(
-                      controller: _txtpassword,
+                      obscureText: true,
+                      controller: _txtPassword,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Password',
@@ -185,6 +188,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                 SizedBox(
                     width: 300,
                     child: TextField(
+                      obscureText: true,
                       controller: _txtComfirmPassword,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
