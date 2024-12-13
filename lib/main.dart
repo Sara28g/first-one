@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'sara',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey.shade200),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.black26),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'sara'),
@@ -71,13 +71,14 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black12,
       appBar: AppBar(
         title: const Text('Log-In',
             style: TextStyle(
               color: Colors.white,
               fontSize: 30,
             )),
-        backgroundColor: Colors.blueGrey.shade800,
+        backgroundColor: Color(0xFF252525),
       ),
       body: Center(
         child: Stack(
@@ -87,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
               width: 350,
               height: 325,
               decoration: BoxDecoration(
-                color: Colors.blueGrey.shade200,
+                color:  Color(0xFF253622),
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -98,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 const Text(
                   "UserName or Email:",
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontSize: 20,
                   ),
                   textAlign: TextAlign.left,
@@ -108,8 +109,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: TextField(
                       controller: _controller,
                       decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white)
+                        ),
                         hintText: 'UserName/Email',
+                          hintStyle: TextStyle(color: Colors.white)
                       ),
                     )),
                 const SizedBox(height: 2),
@@ -117,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 const Text(
                   "password:",
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontSize: 20,
 
                   ),
@@ -128,8 +132,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     width: 300,
                     child: TextField(
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white)
+                        ),
                         hintText: 'password',
+                        hintStyle: TextStyle(color: Colors.white)
                       ),
                     )),
                 const SizedBox(height: 10),
@@ -138,7 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: ButtonStyle(
                     foregroundColor: MaterialStateProperty.all<Color>(
                         Colors.white),
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey.shade900),
+                    backgroundColor: MaterialStateProperty.all<Color>( Color(0xFF394d36)),
 
                   ),
                   onPressed: () {
@@ -174,7 +181,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: ButtonStyle(
                     foregroundColor: MaterialStateProperty.all<Color>(
                         Colors.white),
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey.shade900),
+                    backgroundColor: MaterialStateProperty.all<Color>( Color(0xFF394d36)),
 
                   ),
                   onPressed: () {

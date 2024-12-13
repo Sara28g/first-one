@@ -436,7 +436,7 @@ class HomepagescreenPageState extends State<HomePageScreen> {
               color: Colors.white,
               fontSize: 30,
             )),
-        backgroundColor: Colors.blueGrey.shade800,
+        backgroundColor: Color(0xFF252525),
       ),
       /*
       body: Center(

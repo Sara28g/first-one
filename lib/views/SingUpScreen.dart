@@ -60,13 +60,14 @@ class SingUpScreenPageState extends State<SingUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black12,
       appBar: AppBar(
         title: const Text('Sing-Up',
             style: TextStyle(
               color: Colors.white,
               fontSize: 30,
             )),
-        backgroundColor: Colors.blueGrey.shade800,
+        backgroundColor: Color(0xFF252525),
       ),
       body: Center(
         child: Stack(
@@ -76,7 +77,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
               width: 350,
               height: 650,
               decoration: BoxDecoration(
-                color: Colors.blueGrey.shade200,
+                color: Color(0xFF253622),
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -88,7 +89,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                 const Text(
                   "First Name:",
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontSize: 20,
                   ),
                   textAlign: TextAlign.left,
@@ -98,8 +99,12 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                   child: TextField(
                     controller: _txtfirstName,
                     decoration: InputDecoration(
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white)
+                      ),
                       hintText: 'First Name',
+                        hintStyle: TextStyle(color: Colors.white)
+
                     ),
                   ),
                 ),
@@ -107,7 +112,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                 const Text(
                   "Last Name:",
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontSize: 20,
                   ),
                   textAlign: TextAlign.left,
@@ -117,15 +122,19 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                     child: TextField(
                       controller: _txtLastName,
                       decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white)
+                        ),
                         hintText: 'Last Name:',
+                          hintStyle: TextStyle(color: Colors.white)
+
                       ),
                     )),
                 const SizedBox(height: 2),
                 const Text(
                   "UserName:",
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontSize: 20,
                   ),
                   textAlign: TextAlign.left,
@@ -135,15 +144,19 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                     child: TextField(
                       controller: _txtUserName,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white)
+                        ),
                         hintText: 'UserName',
+                          hintStyle: TextStyle(color: Colors.white)
+
                       ),
                     )),
                 const SizedBox(height: 2),
                 const Text(
                   "Email:",
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontSize: 20,
                   ),
                   textAlign: TextAlign.left,
@@ -153,15 +166,19 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                     child: TextField(
                       controller: _txtEmail,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white)
+                        ),
                         hintText: 'Email',
+                          hintStyle: TextStyle(color: Colors.white)
+
                       ),
                     )),
                 const SizedBox(height: 2),
                 const Text(
                   " Password:",
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontSize: 20,
                   ),
                   textAlign: TextAlign.left,
@@ -172,15 +189,19 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                       obscureText: true,
                       controller: _txtPassword,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white)
+                        ),
                         hintText: 'Password',
+                          hintStyle: TextStyle(color: Colors.white)
+
                       ),
                     )),
                 const SizedBox(height: 2),
                 const Text(
                   "Confirm Password:",
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontSize: 20,
                   ),
                   textAlign: TextAlign.left,
@@ -191,8 +212,12 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                       obscureText: true,
                       controller: _txtComfirmPassword,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white)
+                        ),
                         hintText: 'Confirm Password:',
+                          hintStyle: TextStyle(color: Colors.white)
+
                       ),
                     )),
                 const SizedBox(height: 10),
@@ -201,7 +226,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                     foregroundColor:
                         MaterialStateProperty.all<Color>(Colors.white),
                     backgroundColor: MaterialStateProperty.all<Color>(
-                        Colors.blueGrey.shade900),
+                        Color(0xFF394d36)),
                   ),
                   onPressed: () {
                       insertUserFunc();
