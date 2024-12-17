@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'HomePageScreen.dart';
+import 'SingUpScreen.dart';
 
 
 class LogInScreen extends StatefulWidget {
@@ -28,17 +29,23 @@ class _LogInScreenState extends State<LogInScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  "Welcome Back",
-                  style: GoogleFonts.lobster(
-                    textStyle: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
+                const Align(
+                    alignment: Alignment.centerLeft,
+                  child:  Text(
+                    " Welcome Back",
+                    style: TextStyle(
+                      fontFamily:HttpHeaders.acceptCharsetHeader,
+                      color: Colors.white,
+                      fontSize: 40,
+                    ),
+                    textAlign: TextAlign.left,
                   ),
-                  ),
-                  textAlign: TextAlign.left,
+
                 ),
-                SizedBox(height: 40),
+
+
+
+                SizedBox(height: 10),
 
                Container(
                padding: EdgeInsets.all(16),
@@ -55,7 +62,9 @@ class _LogInScreenState extends State<LogInScreen> {
               ),
               child: Column(
                   children: [
-                  TextFormField(
+                    SizedBox(height: 10),
+
+                    TextFormField(
                   controller: _txtEmail,
                   decoration: InputDecoration(
                     labelText: 'Email',
@@ -106,7 +115,7 @@ class _LogInScreenState extends State<LogInScreen> {
                   },
                 ),
 
-                SizedBox(height: 30),
+                SizedBox(height: 20),
 
                 ElevatedButton(
                   onPressed: () {
@@ -145,6 +154,20 @@ class _LogInScreenState extends State<LogInScreen> {
                     style: TextStyle(color:  Color(0xFF253021)),
                   ),
                 ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                            builder: (context) =>
+                        const SingUpScreen(title: "Log In")),
+                        );
+                      },
+                      child: const Text(
+                        'New Account',
+                        style: TextStyle(color:  Color(0xFF253021)),
+                      ),
+                    ),
                   ],
                  ),
 
