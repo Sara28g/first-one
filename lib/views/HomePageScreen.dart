@@ -17,7 +17,7 @@ class HomepagescreenPageState extends State<HomePageScreen> {
   void _incrementCounter() {}
   final _txtUserName =  TextEditingController();
   final _txtPassword =  TextEditingController();
-  bool _isTextFieldVisible = false;
+  var _isTextFieldVisible = true;
 
 
   @override
@@ -34,7 +34,24 @@ class HomepagescreenPageState extends State<HomePageScreen> {
         ),
       ),
       //buttom
-      bottomNavigationBar: Container(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Container(
+        margin: const EdgeInsets.only(top:10),
+        height: 64,
+        width: 64,
+        child: FloatingActionButton(
+          backgroundColor: Colors.black,
+            elevation: 8,
+            onPressed: () =>debugPrint(""),
+             shape: RoundedRectangleBorder(
+            side: const BorderSide(width: 3, color: Color(0xFF253622) ),
+            borderRadius: BorderRadius.circular(100),
+          ),
+           child: const Icon(Icons.play_arrow_outlined,color: Color(0xFF253622)),
+          ),
+        ),
+
+        bottomNavigationBar: Container(
         color: Colors.black,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
@@ -267,9 +284,13 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                                                                               color: Colors.white,
                                                                               fontSize: 14)),
                                                                       onTap: () {
+                                                                        setState(() {
                                                                           _isTextFieldVisible = !(_isTextFieldVisible);
+                                                                          print("isText $_isTextFieldVisible");
+                                                                        });
                                                                           },
                                                                     ),
+
                                                                     /*
                                                                     const Text(
                                                                       "   Change UserName:",
@@ -281,10 +302,10 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                                                                     ),
                                                                     const SizedBox(height: 8),
 
-                                                                     */
+ */
 
-                                                                    if (_isTextFieldVisible)
-                                                                    Align(
+                                                                    Visibility(visible:_isTextFieldVisible,
+                                                                       child: Align(
                                                                       alignment: Alignment.center,
                                                                        child: SizedBox(
                                                                         height:45,
@@ -297,6 +318,9 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                                                                           ),
                                                                         )),
                                                                        ),
+                                                                    ),
+
+
 
 
                                                                     const SizedBox(height: 4),
@@ -408,6 +432,7 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                                   top: Radius.circular(16)),
                             ),
                             child: ListView.builder(
+
                               controller: scrollController,
                               itemCount: 25,
                               itemBuilder: (BuildContext context, int index) {
