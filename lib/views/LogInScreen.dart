@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'HomePageScreen.dart';
 
@@ -27,7 +28,16 @@ class _LogInScreenState extends State<LogInScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-
+                Text(
+                  "Welcome Back",
+                  style: GoogleFonts.lobster(
+                    textStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                  ),
+                  ),
+                  textAlign: TextAlign.left,
+                ),
                 SizedBox(height: 40),
 
                Container(
@@ -112,13 +122,13 @@ class _LogInScreenState extends State<LogInScreen> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 64),
+                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 64),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),),
                         foregroundColor:Colors.white,
                         backgroundColor:Color(0xFFD4DED1),
                     ),
-                  child: Text(
+                  child: const Text(
                     'Log In',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
@@ -130,7 +140,7 @@ class _LogInScreenState extends State<LogInScreen> {
                   onPressed: () {
                     _showForgotPasswordModal(context);
                   },
-                  child: Text(
+                  child: const Text(
                     'Forgot Password?',
                     style: TextStyle(color:  Color(0xFF253021)),
                   ),

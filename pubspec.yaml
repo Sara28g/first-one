@@ -39,6 +39,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   google_nav_bar: ^5.0.7
   mysql1: ^0.20.0
+  google_fonts: ^6.2.1
 
 
 dev_dependencies:
@@ -69,6 +70,7 @@ flutter:
     - lib/images/logo.jpeg
     - lib/images/woodlogo.jpeg
     - lib/images/backlogo.jpeg
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:
