@@ -160,7 +160,7 @@ class _LogInScreenState extends State<LogInScreen> {
                             context,
                             MaterialPageRoute(
                             builder: (context) =>
-                        const SingUpScreen(title: "Log In")),
+                        const SingUpScreen(title: "")),
                         );
                       },
                       child: const Text(
