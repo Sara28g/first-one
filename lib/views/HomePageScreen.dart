@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sliding_up_panel/flutter_sliding_up_panel.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
-import 'EditProfile.dart';
-
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key, required this.title});
 
@@ -15,10 +13,9 @@ class HomePageScreen extends StatefulWidget {
 
 class HomepagescreenPageState extends State<HomePageScreen> {
   void _incrementCounter() {}
-  final _txtUserName =  TextEditingController();
-  final _txtPassword =  TextEditingController();
+  final _txtUserName = TextEditingController();
+  final _txtPassword = TextEditingController();
   bool _isTextFieldVisible = false;
-
 
   @override
   Widget build(BuildContext context) {
@@ -36,18 +33,19 @@ class HomepagescreenPageState extends State<HomePageScreen> {
       //buttom
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Container(
-        margin: const EdgeInsets.only(top:10),
+        margin: const EdgeInsets.only(top: 10),
         height: 64,
         width: 64,
         child: FloatingActionButton(
           backgroundColor: Colors.black,
           elevation: 8,
-          onPressed: () =>debugPrint(""),
+          onPressed: () => debugPrint(""),
           shape: RoundedRectangleBorder(
-            side: const BorderSide(width: 3, color: Color(0xFF253622) ),
+            side: const BorderSide(width: 3, color: Color(0xFF253622)),
             borderRadius: BorderRadius.circular(100),
           ),
-          child: const Icon(Icons.play_arrow_outlined,color: Color(0xFF253622)),
+          child:
+              const Icon(Icons.play_arrow_outlined, color: Color(0xFF253622)),
         ),
       ),
 
@@ -67,7 +65,6 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                 icon: Icons.home,
                 text: "Home",
               ),
-
               GButton(
                 icon: Icons.settings,
                 text: "Settings",
@@ -183,7 +180,6 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                                                       // Perform action for Notifications
                                                     },
                                                   ),
-
                                                   ListTile(
                                                     title: const Row(
                                                       mainAxisAlignment:
@@ -240,55 +236,74 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                                                     onPressed: () {
                                                       showModalBottomSheet(
                                                         context: context,
-                                                        barrierColor: Colors.transparent,
-                                                        isScrollControlled: true,
-                                                        shape: const RoundedRectangleBorder(
-                                                          borderRadius: BorderRadius.vertical(
-                                                              top: Radius.circular(20)),
+                                                        barrierColor:
+                                                            Colors.transparent,
+                                                        isScrollControlled:
+                                                            true,
+                                                        shape:
+                                                            const RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.vertical(
+                                                                  top: Radius
+                                                                      .circular(
+                                                                          20)),
                                                         ),
-                                                        builder: (BuildContext context) {
+                                                        builder: (BuildContext
+                                                            context) {
                                                           return DraggableScrollableSheet(
-                                                            initialChildSize: 0.4,
+                                                            initialChildSize:
+                                                                0.4,
                                                             minChildSize: 0.2,
                                                             maxChildSize: 0.8,
                                                             expand: false,
-                                                            builder: (BuildContext context,
+                                                            builder: (BuildContext
+                                                                    context,
                                                                 ScrollController
-                                                                scrollController) {
+                                                                    scrollController) {
                                                               return Container(
-                                                                decoration: const BoxDecoration(
-                                                                  color: Colors.black,
+                                                                decoration:
+                                                                    const BoxDecoration(
+                                                                  color: Colors
+                                                                      .black,
                                                                   borderRadius:
-                                                                  BorderRadius.vertical(
-                                                                      top: Radius.circular(
-                                                                          16)),
+                                                                      BorderRadius.vertical(
+                                                                          top: Radius.circular(
+                                                                              16)),
                                                                 ),
                                                                 child: ListView(
-                                                                  controller: scrollController,
+                                                                  controller:
+                                                                      scrollController,
                                                                   children: [
                                                                     ListTile(
                                                                       leading: Icon(
-                                                                          Icons.edit,
-                                                                          color: Colors.white),
-                                                                      title: Text("Edit Profile",
+                                                                          Icons
+                                                                              .edit,
+                                                                          color:
+                                                                              Colors.white),
+                                                                      title: Text(
+                                                                          "Edit Profile",
                                                                           style: TextStyle(
                                                                               color: Colors.white,
                                                                               fontSize: 16)),
-                                                                      onTap: () {
+                                                                      onTap:
+                                                                          () {
                                                                         // Perform action for Profile
                                                                       },
                                                                     ),
                                                                     ListTile(
-                                                                      title: const Text("   Change UserName",
+                                                                      title: const Text(
+                                                                          "   Change UserName",
                                                                           style: TextStyle(
                                                                               color: Colors.white,
                                                                               fontSize: 14)),
-                                                                      onTap: () {
-                                                                        setState(() {
-                                                                          _isTextFieldVisible = !(_isTextFieldVisible);
-
+                                                                      onTap:
+                                                                          () {
+                                                                        setState(
+                                                                            () {
+                                                                          _isTextFieldVisible =
+                                                                              !(_isTextFieldVisible);
                                                                         });
-                                                                          },
+                                                                      },
                                                                     ),
                                                                     /*
                                                                     const Text(
@@ -303,24 +318,28 @@ class HomepagescreenPageState extends State<HomePageScreen> {
 
                                                                      */
 
-                                                              Visibility(visible:_isTextFieldVisible,
-                                                              child: Align(
-                                                                      alignment: Alignment.center,
-                                                                       child: SizedBox(
-                                                                        height:45,
-                                                                        width: 300,
-                                                                        child: TextField(
-                                                                          controller: _txtUserName,
-                                                                          decoration: InputDecoration(
-                                                                            border: OutlineInputBorder(),
-                                                                            hintText: 'New UserName',
-                                                                          ),
-                                                                        )),
-                                                                       ),
-                                                              ),
-
-
-                                                                    const SizedBox(height: 4),
+                                                                    Visibility(
+                                                                      visible:
+                                                                          _isTextFieldVisible,
+                                                                      child:
+                                                                          Align(
+                                                                        alignment:
+                                                                            Alignment.center,
+                                                                        child: SizedBox(
+                                                                            height: 45,
+                                                                            width: 300,
+                                                                            child: TextField(
+                                                                              controller: _txtUserName,
+                                                                              decoration: InputDecoration(
+                                                                                border: OutlineInputBorder(),
+                                                                                hintText: 'New UserName',
+                                                                              ),
+                                                                            )),
+                                                                      ),
+                                                                    ),
+                                                                    const SizedBox(
+                                                                        height:
+                                                                            4),
 /*
                                                                     const Text(
                                                                       "   Change Password:",
@@ -347,7 +366,9 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                                                                     ),
 
  */
-                                                                    const SizedBox(height: 8),
+                                                                    const SizedBox(
+                                                                        height:
+                                                                            8),
                                                                   ],
                                                                 ),
                                                               );
@@ -459,56 +480,6 @@ class HomepagescreenPageState extends State<HomePageScreen> {
             )),
         backgroundColor: Color(0xFF252525),
       ),
-      /*
-      body: Center(
-        child: Stack(
-          alignment: Alignment.center,
-          children: <Widget>[
-            Container(
-              width: 150,
-              height: 150,
-              decoration: BoxDecoration(
-                color: Colors.blueGrey.shade200,
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextButton(
-                    style: ButtonStyle(
-                      foregroundColor:
-                          MaterialStateProperty.all<Color>(Colors.white),
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          Colors.blueGrey.shade900),
-                    ),
-                    onPressed: () {},
-                    child: const Icon(Icons.play_arrow_outlined)),
-                const SizedBox(height: 10),
-                TextButton(
-                    style: ButtonStyle(
-                      foregroundColor:
-                          MaterialStateProperty.all<Color>(Colors.white),
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          Colors.blueGrey.shade900),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const EditProfile(title: "new account")),
-                      );
-                    },
-                    child: const Icon(Icons.account_circle_outlined))
-              ],
-            )
-          ],
-        ),
-      ),
-
-       */
     );
   }
 }
