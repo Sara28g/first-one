@@ -142,6 +142,11 @@ class SingUpScreenPageState extends State<SingUpScreen> {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your email';
                           }
+                          else if (!(isValidEmail(value)))
+                          {
+                           return "Please enter a valid email";
+                          }
+
                           return null;
                         },
                       ),
@@ -228,4 +233,14 @@ class SingUpScreenPageState extends State<SingUpScreen> {
       SnackBar(content: Text("new account created")),
     );
   }
+}
+
+bool isValidEmail(String email) {
+  // Define the email validation RegExp
+  final RegExp emailRegex = RegExp(
+    r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+  );
+
+  // Return whether the input matches the RegExp
+  return emailRegex.hasMatch(email);
 }

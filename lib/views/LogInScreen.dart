@@ -1,5 +1,6 @@
 import 'dart:io';
-
+import 'package:email_auth/email_auth.dart';
+import 'package:first_one/Utils/db.dart';
 import 'package:flutter/material.dart';
 import 'HomePageScreen.dart';
 import 'SingUpScreen.dart';
@@ -13,7 +14,14 @@ class _LogInScreenState extends State<LogInScreen> {
   final _txtEmail = TextEditingController();
   final _txtPassword = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final _formKey2 = GlobalKey<FormState>();
+
+  bool accountValid()
+  {
+    return (checkLogIn(_txtEmail.text, _txtPassword.text) != null);
+  }
   bool _isPasswordVisible = false;
+  final _otpContoler = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +78,11 @@ class _LogInScreenState extends State<LogInScreen> {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your email';
                           }
+                          else if (!(isValidEmail(value)))
+                          {
+                            return "Please enter a valid email";
+                          }
+
                           return null;
                         },
                       ),
@@ -109,7 +122,7 @@ class _LogInScreenState extends State<LogInScreen> {
                       SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () {
-                          if (_formKey.currentState!.validate()) {
+                          if (_formKey.currentState!.validate() && accountValid()) {
                             _login();
                             Navigator.push(
                               context,
@@ -169,6 +182,10 @@ class _LogInScreenState extends State<LogInScreen> {
     );
   }
 
+
+
+
+
   void _login() {
     // Replace with actual login logic
     ScaffoldMessenger.of(context).showSnackBar(
@@ -185,6 +202,7 @@ class _LogInScreenState extends State<LogInScreen> {
       builder: (context) {
         return Padding(
           padding: EdgeInsets.all(16.0),
+          //key: _formKey2,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -201,14 +219,28 @@ class _LogInScreenState extends State<LogInScreen> {
                   ),
                 ),
                 keyboardType: TextInputType.emailAddress,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your email';
+                  }
+                  else if (!(isValidEmail(value)))
+                  {
+                    return "Please enter a valid email";
+                  }
+
+                  return null;
+                },
               ),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context); // Close the modal
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Password reset link sent!")),
-                  );
+                  if (_formKey.currentState!.validate()  ) {
+
+                      Navigator.pop(context); // Close the modal
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Password reset link sent!")),
+                      );
+                  }
                 },
                 child: Text("Submit"),
               ),
@@ -218,4 +250,13 @@ class _LogInScreenState extends State<LogInScreen> {
       },
     );
   }
+}
+bool isValidEmail(String email) {
+  // Define the email validation RegExp
+  final RegExp emailRegex = RegExp(
+    r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+  );
+
+  // Return whether the input matches the RegExp
+  return emailRegex.hasMatch(email);
 }

@@ -18,7 +18,7 @@ Future<void> connect() async {
 
 Future<void> showUsers() async {
 
-  _conn = connect();
+  connect();
 
   // Query the database using a parameterized query
   var results = await _conn.query(
@@ -39,30 +39,17 @@ Future<void> insertUser(User user) async {
       'insert into users (firstName, lastName, password, Email, userName) values (?, ?, ?, ?, ?)',
       [user.firstName, user.lastName, user.password, user.Email, user.username ]);
   print('Inserted row id=${result.insertId}');
-
-
-
-  //////////
-/*
-
-  // Query the database using a parameterized query
-  var results = await conn.query(
-      'select * from users where userID = ?', [6]);  // [result.insertId]
-  for (var row in results) {
-    print('Name: ${row[0]}, email: ${row[1]} age: ${row[2]}');
-  }
-
-  // Update some data
-  await conn.query('update users set firstName=? where userID=?', ['Bob', 5]);
-
-  // Query again database using a parameterized query
-  var results2 = await conn.query(
-      'select * from users where userID = ?', [result.insertId]);
-  for (var row in results2) {
-    print('Name: ${row[0]}, email: ${row[1]} age: ${row[2]}');
-  }
-*/
   // Finally, close the connection
   await _conn.close();
 
+}
+Future<Results> checkLogIn(Email , password) async {
+  connect();
+  print(("checklooogin"));
+  var result = await _conn.query(
+      'select * from users where Email=? and password=?',
+      [Email , password]);
+  print('check logIn row id=${Results}');
+  await _conn.close();
+  return result;
 }
