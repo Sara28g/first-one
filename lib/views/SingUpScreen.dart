@@ -1,9 +1,23 @@
 import 'package:first_one/Utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:first_one/Utils/db.dart';
+import '../Utils/client.dart';
 import '../models/UserModel.dart';
 import 'HomePageScreen.dart';
 import 'dart:io';
+import 'package:http/http.dart' as http;
+
+Future insertUser(BuildContext context, User us) async {
+
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //  String? getInfoDeviceSTR = prefs.getString("getInfoDeviceSTR");
+  var url = "users/insertUser.php?firstName=" + us.firstName + "&lastName=" + us.lastName;
+  final response = await http.get(Uri.parse(serverPath + url));
+  print(serverPath + url);
+  //setState(() { });
+  Navigator.pop(context);
+}
+
 
 class SingUpScreen extends StatefulWidget {
   const SingUpScreen({super.key, required this.title});
@@ -31,7 +45,7 @@ class SingUpScreenPageState extends State<SingUpScreen> {
     user.Email = _txtEmail.text;
     user.username = _txtUserName.text;
 
-    insertUser(user);
+    insertUser(context, user);
 
     // var uti =new Utils();
     // uti.showMyDialog(context, "success", "you registed successfully", "screen", HomePageScreen(title: ""), );

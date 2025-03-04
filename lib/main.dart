@@ -1,6 +1,10 @@
 
+import 'dart:io';
+
 import 'package:first_one/views/SplashScreen.dart';
 import 'package:flutter/material.dart';
+
+import 'Utils/Utils.dart';
 
 void main() {
   runApp(MyApp());
@@ -8,6 +12,10 @@ void main() {
 
 class MyApp extends StatelessWidget {
   @override
+
+
+
+
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,

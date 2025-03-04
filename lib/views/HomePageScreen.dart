@@ -1,6 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_sliding_up_panel/flutter_sliding_up_panel.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:http/http.dart' as http;
+
+import '../Utils/client.dart';
+import '../Utils/db.dart';
+import '../models/UserModel.dart';
 
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key, required this.title});
@@ -17,9 +24,58 @@ class HomepagescreenPageState extends State<HomePageScreen> {
   final _txtPassword = TextEditingController();
   bool _isTextFieldVisible = false;
 
+  // Function to get users from API
+  Future<List<User>> getUsers() async {
+    List<User> arr = [];
+
+    try {
+      var url = "users/getUsers.php";
+      final response = await http.get(Uri.parse(serverPath + url));
+
+      print("Response Status Code: ${response.statusCode}");
+      print("Response Body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        var jsonData = json.decode(response.body);
+
+        // Check if jsonData is null or not a list
+        if (jsonData == null) {
+          throw Exception("Response body is null");
+        }
+        if (jsonData is! List) {
+          throw Exception("Response is not a List. Received: $jsonData");
+        }
+
+        for (var i in jsonData) {
+          arr.add(User.fromJson(i));
+        }
+
+        String usersString = arr.map((user) =>
+        '${user.firstName}, ${user.lastName}, ${user.password}'
+        ).join(', ');
+        print("Formatted User List: $usersString");
+      } else {
+        throw Exception('Failed to load users: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+    return arr;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Home Page',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 30,
+          ),
+        ),
+        backgroundColor: Color(0xFF252525),
+      ),
       body: Container(
         alignment: Alignment.center,
         padding: const EdgeInsets.all(32),
@@ -45,20 +101,20 @@ class HomepagescreenPageState extends State<HomePageScreen> {
             borderRadius: BorderRadius.circular(100),
           ),
           child:
-              const Icon(Icons.play_arrow_outlined, color: Color(0xFF253622)),
+          const Icon(Icons.play_arrow_outlined, color: Color(0xFF253622)),
         ),
       ),
 
       bottomNavigationBar: Container(
         color: Colors.black,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
           child: GNav(
             backgroundColor: Colors.black,
             color: Colors.lightGreen.shade900,
             activeColor: Colors.lightGreen.shade900,
             tabBackgroundColor: Colors.grey.shade800,
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             gap: 8,
             tabs: [
               const GButton(
@@ -72,9 +128,9 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                   showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
-                    shape: RoundedRectangleBorder(
+                    shape: const RoundedRectangleBorder(
                       borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(20)),
+                      BorderRadius.vertical(top: Radius.circular(20)),
                     ),
                     builder: (BuildContext context) {
                       return DraggableScrollableSheet(
@@ -85,7 +141,7 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                         builder: (BuildContext context,
                             ScrollController scrollController) {
                           return Container(
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: Colors.black,
                               borderRadius: BorderRadius.vertical(
                                   top: Radius.circular(16)),
@@ -95,8 +151,8 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                               children: [
                                 ListTile(
                                   leading:
-                                      Icon(Icons.settings, color: Colors.white),
-                                  title: Text("Settings",
+                                  const Icon(Icons.settings, color: Colors.white),
+                                  title: const Text("Settings",
                                       style: TextStyle(
                                           color: Colors.white, fontSize: 16)),
                                   onTap: () {
@@ -105,8 +161,8 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                                 ),
                                 ListTile(
                                   leading:
-                                      Icon(Icons.person, color: Colors.white),
-                                  title: Text(
+                                  const Icon(Icons.person, color: Colors.white),
+                                  title: const Text(
                                     "Profile",
                                     style: TextStyle(
                                       color: Colors.white,
@@ -130,23 +186,23 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                                           expand: false,
                                           builder: (BuildContext context,
                                               ScrollController
-                                                  scrollController) {
+                                              scrollController) {
                                             return Container(
                                               decoration: const BoxDecoration(
                                                 color: Colors.black,
                                                 borderRadius:
-                                                    BorderRadius.vertical(
-                                                        top: Radius.circular(
-                                                            16)),
+                                                BorderRadius.vertical(
+                                                    top: Radius.circular(
+                                                        16)),
                                               ),
                                               child: ListView(
                                                 controller: scrollController,
                                                 children: [
                                                   ListTile(
-                                                    leading: Icon(
+                                                    leading: const Icon(
                                                         Icons.account_circle,
                                                         color: Colors.white),
-                                                    title: Text("Profile",
+                                                    title: const Text("Profile",
                                                         style: TextStyle(
                                                             color: Colors.white,
                                                             fontSize: 16)),
@@ -155,10 +211,10 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                                                     },
                                                   ),
                                                   ListTile(
-                                                    title: Row(
+                                                    title: const Row(
                                                       mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                       children: [
                                                         Text(
                                                           "    User Name:",
@@ -183,8 +239,8 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                                                   ListTile(
                                                     title: const Row(
                                                       mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                       children: [
                                                         Text(
                                                           "    First Name:",
@@ -209,8 +265,8 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                                                   ListTile(
                                                     title: const Row(
                                                       mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                       children: [
                                                         Text(
                                                           "    Last Name:",
@@ -237,50 +293,50 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                                                       showModalBottomSheet(
                                                         context: context,
                                                         barrierColor:
-                                                            Colors.transparent,
+                                                        Colors.transparent,
                                                         isScrollControlled:
-                                                            true,
+                                                        true,
                                                         shape:
-                                                            const RoundedRectangleBorder(
+                                                        const RoundedRectangleBorder(
                                                           borderRadius:
-                                                              BorderRadius.vertical(
-                                                                  top: Radius
-                                                                      .circular(
-                                                                          20)),
+                                                          BorderRadius.vertical(
+                                                              top: Radius
+                                                                  .circular(
+                                                                  20)),
                                                         ),
                                                         builder: (BuildContext
-                                                            context) {
+                                                        context) {
                                                           return DraggableScrollableSheet(
                                                             initialChildSize:
-                                                                0.4,
+                                                            0.4,
                                                             minChildSize: 0.2,
                                                             maxChildSize: 0.8,
                                                             expand: false,
                                                             builder: (BuildContext
-                                                                    context,
+                                                            context,
                                                                 ScrollController
-                                                                    scrollController) {
+                                                                scrollController) {
                                                               return Container(
                                                                 decoration:
-                                                                    const BoxDecoration(
+                                                                const BoxDecoration(
                                                                   color: Colors
                                                                       .black,
                                                                   borderRadius:
-                                                                      BorderRadius.vertical(
-                                                                          top: Radius.circular(
-                                                                              16)),
+                                                                  BorderRadius.vertical(
+                                                                      top: Radius.circular(
+                                                                          16)),
                                                                 ),
                                                                 child: ListView(
                                                                   controller:
-                                                                      scrollController,
+                                                                  scrollController,
                                                                   children: [
                                                                     ListTile(
-                                                                      leading: Icon(
+                                                                      leading: const Icon(
                                                                           Icons
                                                                               .edit,
                                                                           color:
-                                                                              Colors.white),
-                                                                      title: Text(
+                                                                          Colors.white),
+                                                                      title: const Text(
                                                                           "Edit Profile",
                                                                           style: TextStyle(
                                                                               color: Colors.white,
@@ -299,38 +355,25 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                                                                       onTap:
                                                                           () {
                                                                         setState(
-                                                                            () {
-                                                                          _isTextFieldVisible =
+                                                                                () {
+                                                                              _isTextFieldVisible =
                                                                               !(_isTextFieldVisible);
-                                                                        });
+                                                                            });
                                                                       },
                                                                     ),
-                                                                    /*
-                                                                    const Text(
-                                                                      "   Change UserName:",
-                                                                      style: TextStyle(
-                                                                        color: Colors.white,
-                                                                        fontSize: 14,
-                                                                      ),
-                                                                      textAlign: TextAlign.left,
-                                                                    ),
-                                                                    const SizedBox(height: 8),
-
-                                                                     */
-
                                                                     Visibility(
                                                                       visible:
-                                                                          _isTextFieldVisible,
+                                                                      _isTextFieldVisible,
                                                                       child:
-                                                                          Align(
+                                                                      Align(
                                                                         alignment:
-                                                                            Alignment.center,
+                                                                        Alignment.center,
                                                                         child: SizedBox(
                                                                             height: 45,
                                                                             width: 300,
                                                                             child: TextField(
                                                                               controller: _txtUserName,
-                                                                              decoration: InputDecoration(
+                                                                              decoration: const InputDecoration(
                                                                                 border: OutlineInputBorder(),
                                                                                 hintText: 'New UserName',
                                                                               ),
@@ -339,36 +382,10 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                                                                     ),
                                                                     const SizedBox(
                                                                         height:
-                                                                            4),
-/*
-                                                                    const Text(
-                                                                      "   Change Password:",
-                                                                      style: TextStyle(
-                                                                        color: Colors.white,
-                                                                        fontSize: 15,
-                                                                      ),
-                                                                      textAlign: TextAlign.left,
-                                                                    ),
-                                                                    const SizedBox(height: 8),
-
-                                                                    Align(
-                                                                      alignment: Alignment.center,
-                                                                      child: SizedBox(
-                                                                        height:45,
-                                                                        width: 300,
-                                                                        child: TextField(
-                                                                          controller: _txtPassword,
-                                                                          decoration: InputDecoration(
-                                                                            border: OutlineInputBorder(),
-                                                                            hintText: 'Pssword',
-                                                                          ),
-                                                                        )),
-                                                                    ),
-
- */
+                                                                        4),
                                                                     const SizedBox(
                                                                         height:
-                                                                            8),
+                                                                        8),
                                                                   ],
                                                                 ),
                                                               );
@@ -395,9 +412,9 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                                   },
                                 ),
                                 ListTile(
-                                  leading: Icon(Icons.play_arrow,
+                                  leading: const Icon(Icons.play_arrow,
                                       color: Colors.white),
-                                  title: Text(
+                                  title: const Text(
                                     "Game",
                                     style: TextStyle(
                                       color: Colors.white,
@@ -410,8 +427,8 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                                 ),
                                 ListTile(
                                   leading:
-                                      Icon(Icons.logout, color: Colors.white),
-                                  title: Text("Logout",
+                                  const Icon(Icons.logout, color: Colors.white),
+                                  title: const Text("Logout",
                                       style: TextStyle(
                                           color: Colors.white, fontSize: 12)),
                                   onTap: () {
@@ -435,29 +452,70 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                   showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(20)),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                     ),
                     builder: (BuildContext context) {
                       return DraggableScrollableSheet(
-                        builder: (BuildContext context,
-                            ScrollController scrollController) {
+                        initialChildSize: 0.4,
+                        minChildSize: 0.2,
+                        maxChildSize: 0.8,
+                        expand: false,
+                        builder: (BuildContext context, ScrollController scrollController) {
                           return Container(
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: Colors.black,
-                              borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(16)),
+                              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                             ),
-                            child: ListView.builder(
-                              controller: scrollController,
-                              itemCount: 25,
-                              itemBuilder: (BuildContext context, int index) {
-                                return ListTile(
-                                  title: Text("Place ${index + 1}",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 12)),
-                                );
+                            child: FutureBuilder<List<User>>(
+                              future: getUsers(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(color: Colors.red),
+                                  );
+                                } else if (snapshot.hasError) {
+                                  return Center(
+                                    child: Text(
+                                      'Error: ${snapshot.error}',
+                                      style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+                                    ),
+                                  );
+                                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                                  return const Center(
+                                    child: Text(
+                                      'No results',
+                                      style: TextStyle(fontSize: 23, color: Colors.white),
+                                    ),
+                                  );
+                                } else {
+                                  return ListView.builder(
+                                    controller: scrollController,
+                                    itemCount: snapshot.data!.length,
+                                    itemBuilder: (context, index) {
+                                      User user = snapshot.data![index];
+                                      return Card(
+                                        child: ListTile(
+                                          onTap: () {},
+                                          title: Text(
+                                            user.firstName ?? 'N/A',
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black),
+                                          ),
+                                          subtitle: Text(
+                                            user.lastName ?? 'N/A',
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }
                               },
                             ),
                           );
@@ -470,15 +528,6 @@ class HomepagescreenPageState extends State<HomePageScreen> {
             ],
           ),
         ),
-      ),
-
-      appBar: AppBar(
-        title: const Text('Home Page',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 30,
-            )),
-        backgroundColor: Color(0xFF252525),
       ),
     );
   }
