@@ -11,7 +11,7 @@ Future insertUser(BuildContext context, User us) async {
 
   //   SharedPreferences prefs = await SharedPreferences.getInstance();
   //  String? getInfoDeviceSTR = prefs.getString("getInfoDeviceSTR");
-  var url = "users/insertUser.php?firstName=" + us.firstName + "&lastName=" + us.lastName;
+  var url = "users/insertUser.php?firstName=" + us.firstName + "&lastName=" + us.lastName +"&Email=" + us.Email +"&password=" + us.password;
   final response = await http.get(Uri.parse(serverPath + url));
   print(serverPath + url);
   //setState(() { });
@@ -37,7 +37,13 @@ class SingUpScreenPageState extends State<SingUpScreen> {
   final _txtPassword = TextEditingController();
   final _formKey2 = GlobalKey<FormState>();
 
-  void insertUserFunc() {
+  void insertUserFunc(
+      BuildContext context,
+      String firstName,
+      String lastName,
+      String email,
+      String password,
+      ) {
     var user = new User();
     user.firstName = _txtfirstName.text;
     user.lastName = _txtLastName.text;
@@ -241,7 +247,13 @@ class SingUpScreenPageState extends State<SingUpScreen> {
   }
 
   void _singup() {
-    insertUserFunc();
+    insertUserFunc(
+        context,
+        _txtfirstName.text,
+        _txtLastName.text,
+        _txtEmail.text,
+        _txtPassword.text,
+    );
     // Replace with actual login logic
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text("new account created")),

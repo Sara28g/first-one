@@ -1,9 +1,14 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:email_auth/email_auth.dart';
 import 'package:first_one/Utils/db.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../Utils/client.dart';
+import '../models/CheckloginModel.dart';
 import 'HomePageScreen.dart';
 import 'SingUpScreen.dart';
+import 'package:http/http.dart' as http;
 
 class LogInScreen extends StatefulWidget {
   @override
@@ -11,6 +16,10 @@ class LogInScreen extends StatefulWidget {
 }
 
 class _LogInScreenState extends State<LogInScreen> {
+  final _userID= TextEditingController();
+  final _txtUserName = TextEditingController();
+  final _txtfirstName = TextEditingController();
+  final _txtLastName = TextEditingController();
   final _txtEmail = TextEditingController();
   final _txtPassword = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -22,6 +31,36 @@ class _LogInScreenState extends State<LogInScreen> {
   }
   bool _isPasswordVisible = false;
   final _otpContoler = TextEditingController();
+
+  Future checkLogin(BuildContext context) async {
+
+    //   SharedPreferences prefs = await SharedPreferences.getInstance();
+    //  String? getInfoDeviceSTR = prefs.getString("getInfoDeviceSTR");
+    var url = "login/checkLogin.php?userName=" + _txtUserName.text + "&password=" + _txtPassword.text;
+    final response = await http.get(Uri.parse(serverPath + url));
+    print(serverPath + url);
+    // setState(() { });
+    // Navigator.pop(context);
+    if(checkLoginModel.fromJson(jsonDecode(response.body)).result == "0")
+    {
+      print("wrong");
+      return 'incorrect password';
+    }
+    else
+    {  print("right");
+    // print("SharedPreferences 1");
+      _login();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+            const HomePageScreen(title: "Log In")),
+      );
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('token', checkLoginModel.fromJson(jsonDecode(response.body)).result!);
+      // return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,29 +147,26 @@ class _LogInScreenState extends State<LogInScreen> {
                           ),
                         ),
                         obscureText: !_isPasswordVisible,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
-                          }
-                          //else if(value != _txtPassword){
-                          //  return 'incorrect password';
-                          //  }
-                          else
-                            return null;
-                        },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your password';
+                            }
+
+                            //else if(value != _txtPassword){
+                            //  return 'incorrect password';
+                            //  }
+                            else
+                              return null;
+                          },
                       ),
                       SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () {
-                          if (_formKey.currentState!.validate() && accountValid()) {
-                            _login();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const HomePageScreen(title: "Log In")),
-                            );
-                          }
+                          // if (_formKey.currentState!.validate() && accountValid()) {
+                            print("ok");
+                            checkLogin(context);
+
+                          // }
                         },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(
