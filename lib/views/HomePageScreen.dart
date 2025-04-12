@@ -1,10 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_sliding_up_panel/flutter_sliding_up_panel.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../Utils/client.dart';
 import '../Utils/db.dart';
 import '../models/UserModel.dart';
@@ -63,8 +62,40 @@ class HomepagescreenPageState extends State<HomePageScreen> {
     return arr;
   }
 
+
+
+
+  late User _currUser = User(firstName: "", lastName: "", password: "");
+
+
+  Future<void> getDetails() async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final int? userID = prefs.getInt('userID');
+
+      var url = "profile/getMyDetails.php?userID=$userID";
+      final response = await http.get(Uri.parse(serverPath + url));
+
+      // Check if widget is still mounted before calling setState
+      if (mounted && response.statusCode == 200) {
+        setState(() {
+          _currUser = User.fromJson(json.decode(response.body));
+        });
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
+
+    getDetails();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -211,12 +242,12 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                                                     },
                                                   ),
                                                   ListTile(
-                                                    title: const Row(
+                                                    title: Row(
                                                       mainAxisAlignment:
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                       children: [
-                                                        Text(
+                                                        const Text(
                                                           "    User Name:",
                                                           style: TextStyle(
                                                             color: Colors.white,
@@ -224,8 +255,8 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                                                           ),
                                                         ),
                                                         Text(
-                                                          "US",
-                                                          style: TextStyle(
+                                                          _currUser.username ?? "Not available", // Use null-aware operator
+                                                          style: const TextStyle(
                                                             color: Colors.white,
                                                             fontSize: 14,
                                                           ),
@@ -237,12 +268,12 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                                                     },
                                                   ),
                                                   ListTile(
-                                                    title: const Row(
+                                                    title: Row(
                                                       mainAxisAlignment:
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                       children: [
-                                                        Text(
+                                                        const Text(
                                                           "    First Name:",
                                                           style: TextStyle(
                                                             color: Colors.white,
@@ -250,8 +281,8 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                                                           ),
                                                         ),
                                                         Text(
-                                                          "FN",
-                                                          style: TextStyle(
+                                                          _currUser.firstName ?? "Not available", // Use null-aware operator
+                                                          style: const TextStyle(
                                                             color: Colors.white,
                                                             fontSize: 14,
                                                           ),
@@ -263,12 +294,12 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                                                     },
                                                   ),
                                                   ListTile(
-                                                    title: const Row(
+                                                    title: Row(
                                                       mainAxisAlignment:
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                       children: [
-                                                        Text(
+                                                        const Text(
                                                           "    Last Name:",
                                                           style: TextStyle(
                                                             color: Colors.white,
@@ -276,8 +307,8 @@ class HomepagescreenPageState extends State<HomePageScreen> {
                                                           ),
                                                         ),
                                                         Text(
-                                                          "LN",
-                                                          style: TextStyle(
+                                                          _currUser.lastName?? "Not available", // Use null-aware operator
+                                                          style: const TextStyle(
                                                             color: Colors.white,
                                                             fontSize: 12,
                                                           ),

@@ -1,21 +1,18 @@
-class checkLoginModel {
-  String? result;
+class checkloginModel {
+  int? userID;
   String? fullName;
 
 
-
-
-  checkLoginModel({
-    this.result,
+  checkloginModel({
+    this.userID,
     this.fullName,
-
 
   });
 
 
-  factory checkLoginModel.fromJson(Map<String, dynamic> json) {
-    return checkLoginModel(
-      result: json['result'],
+  factory checkloginModel.fromJson(Map<String, dynamic> json) {
+    return checkloginModel(
+      userID: json['userID'],
       fullName: json['fullName'],
 
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:email_auth/email_auth.dart';
 import 'package:first_one/Utils/db.dart';
 import 'package:flutter/material.dart';
@@ -16,54 +17,109 @@ class LogInScreen extends StatefulWidget {
 }
 
 class _LogInScreenState extends State<LogInScreen> {
-  final _userID= TextEditingController();
-  final _txtUserName = TextEditingController();
-  final _txtfirstName = TextEditingController();
-  final _txtLastName = TextEditingController();
+  // final _userID = TextEditingController();
+  // final _txtUserName = TextEditingController();
+  // final _txtfirstName = TextEditingController();
+  // final _txtLastName = TextEditingController();
   final _txtEmail = TextEditingController();
   final _txtPassword = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _formKey2 = GlobalKey<FormState>();
 
-  bool accountValid()
-  {
-    return (checkLogIn(_txtEmail.text, _txtPassword.text) != null);
-  }
   bool _isPasswordVisible = false;
   final _otpContoler = TextEditingController();
+  bool _isLoading = false;
 
-  Future checkLogin(BuildContext context) async {
 
-    //   SharedPreferences prefs = await SharedPreferences.getInstance();
-    //  String? getInfoDeviceSTR = prefs.getString("getInfoDeviceSTR");
-    var url = "login/checkLogin.php?userName=" + _txtUserName.text + "&password=" + _txtPassword.text;
-    final response = await http.get(Uri.parse(serverPath + url));
-    print(serverPath + url);
-    // setState(() { });
-    // Navigator.pop(context);
-    if(checkLoginModel.fromJson(jsonDecode(response.body)).result == "0")
+  fillSavedPars()
+  async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _txtEmail.text = prefs.get("Email").toString();
+    _txtPassword.text = prefs.get("password").toString();
+    if(_txtEmail.text != "" && _txtPassword.text != "")
     {
-      print("wrong");
-      return 'incorrect password';
-    }
-    else
-    {  print("right");
-    // print("SharedPreferences 1");
-      _login();
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-            const HomePageScreen(title: "Log In")),
-      );
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('token', checkLoginModel.fromJson(jsonDecode(response.body)).result!);
-      // return null;
+       checklogin(context);
     }
   }
+
+
+
+  // Updated checkLogin implementation with SnackBar instead of Utils
+  Future <void> checklogin(BuildContext context) async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      if (_txtPassword.text != "" && _txtEmail.text != "") {
+        var url = "login/checklogin.php?email=${_txtEmail.text}&password=${_txtPassword.text}";
+        final response = await http.get(Uri.parse(serverPath + url));
+
+        print(response);
+        print(serverPath + url);
+
+        if (checkloginModel.fromJson(jsonDecode(response.body)).userID == 0) {
+          print("SharedPreferences 0");
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Invalid email or password. Please try again.'),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 3),
+            ),
+          );
+        } else {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('Email', _txtEmail.text);
+          await prefs.setString('password', _txtPassword.text);
+          await prefs.setInt('userID', checkloginModel.fromJson(jsonDecode(response.body)).userID!);
+          await prefs.setString('fullName', checkloginModel.fromJson(jsonDecode(response.body)).fullName!);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Login successful!'),
+              backgroundColor: Colors.green,
+              duration: Duration(seconds: 2),
+            ),
+          );
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomePageScreen(title: "Home")),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('You should fill in email and password'),
+            backgroundColor: Colors.orange,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    } catch (e) {
+      print("Error during login: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('An error occurred: $e'),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3),
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
+
+    fillSavedPars();
+
+
     return Scaffold(
       backgroundColor: Color(0xFF253021),
       body: Center(
@@ -111,17 +167,15 @@ class _LogInScreenState extends State<LogInScreen> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
+                          prefixIcon: Icon(Icons.email),
                         ),
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your email';
-                          }
-                          else if (!(isValidEmail(value)))
-                          {
+                          } else if (!(isValidEmail(value))) {
                             return "Please enter a valid email";
                           }
-
                           return null;
                         },
                       ),
@@ -133,6 +187,7 @@ class _LogInScreenState extends State<LogInScreen> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
+                          prefixIcon: Icon(Icons.lock),
                           suffixIcon: IconButton(
                             icon: Icon(
                               _isPasswordVisible
@@ -147,65 +202,68 @@ class _LogInScreenState extends State<LogInScreen> {
                           ),
                         ),
                         obscureText: !_isPasswordVisible,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your password';
-                            }
-
-                            //else if(value != _txtPassword){
-                            //  return 'incorrect password';
-                            //  }
-                            else
-                              return null;
-                          },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your password';
+                          }
+                          return null;
+                        },
                       ),
                       SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          // if (_formKey.currentState!.validate() && accountValid()) {
-                            print("ok");
-                            checkLogin(context);
-
-                          // }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 16, horizontal: 64),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                      _isLoading
+                          ? CircularProgressIndicator(color: Color(0xFF253021))
+                          : ElevatedButton(
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  // Hide keyboard
+                                  FocusScope.of(context).unfocus();
+                                  checklogin(context);
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 16, horizontal: 64),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                foregroundColor: Colors.white,
+                                backgroundColor: Color(0xFF253021),
+                              ),
+                              child: const Text(
+                                'Log In',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              _showForgotPasswordModal(context);
+                            },
+                            child: const Text(
+                              'Forgot Password?',
+                              style: TextStyle(color: Color(0xFF253021)),
+                            ),
                           ),
-                          foregroundColor: Colors.white,
-                          backgroundColor: Color(0xFFD4DED1),
-                        ),
-                        child: const Text(
-                          'Log In',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      TextButton(
-                        onPressed: () {
-                          _showForgotPasswordModal(context);
-                        },
-                        child: const Text(
-                          'Forgot Password?',
-                          style: TextStyle(color: Color(0xFF253021)),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const SingUpScreen(title: "")),
-                          );
-                        },
-                        child: const Text(
-                          'New Account',
-                          style: TextStyle(color: Color(0xFF253021)),
-                        ),
+                          SizedBox(width: 20),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const SingUpScreen(title: "")),
+                              );
+                            },
+                            child: const Text(
+                              'New Account',
+                              style: TextStyle(color: Color(0xFF253021)),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -218,75 +276,107 @@ class _LogInScreenState extends State<LogInScreen> {
     );
   }
 
-
-
-
-
-  void _login() {
-    // Replace with actual login logic
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Login Successful!")),
-    );
-  }
-
   void _showForgotPasswordModal(BuildContext context) {
+    final _forgotEmailController = TextEditingController();
+    bool _isProcessing = false;
+
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
-        return Padding(
-          padding: EdgeInsets.all(16.0),
-          //key: _formKey2,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "Forgot Password",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 20),
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Enter your email',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+        return StatefulBuilder(builder: (context, setState) {
+          return Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+              left: 16,
+              right: 16,
+              top: 16,
+            ),
+            child: Form(
+              key: _formKey2,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Forgot Password",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                ),
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  else if (!(isValidEmail(value)))
-                  {
-                    return "Please enter a valid email";
-                  }
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: _forgotEmailController,
+                    decoration: InputDecoration(
+                      labelText: 'Enter your email',
+                      hintText: 'We\'ll send you a password reset link',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      prefixIcon: Icon(Icons.email),
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your email';
+                      } else if (!(isValidEmail(value))) {
+                        return "Please enter a valid email";
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  _isProcessing
+                      ? CircularProgressIndicator(color: Color(0xFF253021))
+                      : ElevatedButton(
+                          onPressed: () async {
+                            if (_formKey2.currentState!.validate()) {
+                              setState(() {
+                                _isProcessing = true;
+                              });
 
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()  ) {
+                              // Simulate API call
+                              await Future.delayed(Duration(seconds: 2));
 
-                      Navigator.pop(context); // Close the modal
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Password reset link sent!")),
-                      );
-                  }
-                },
-                child: Text("Submit"),
+                              setState(() {
+                                _isProcessing = false;
+                              });
+
+                              Navigator.pop(context); // Close the modal
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      "Password reset link sent to ${_forgotEmailController.text}"),
+                                  backgroundColor: Colors.black,
+                                ),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 40),
+                            backgroundColor: Color(0xFF253021),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Text(
+                            "Send Reset Link",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                  SizedBox(height: 16),
+                ],
               ),
-            ],
-          ),
-        );
+            ),
+          );
+        });
       },
     );
   }
 }
+
 bool isValidEmail(String email) {
   // Define the email validation RegExp
   final RegExp emailRegex = RegExp(
