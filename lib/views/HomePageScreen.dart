@@ -112,7 +112,7 @@ class HomepagescreenPageState extends State<HomePageScreen> {
         padding: const EdgeInsets.all(32),
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('lib/images/background.jpeg'),
+            image: AssetImage('assets/homepage.png'),
             fit: BoxFit.cover, // Adjusts the image to cover the whole screen
           ),
         ),
@@ -142,9 +142,9 @@ class HomepagescreenPageState extends State<HomePageScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
           child: GNav(
             backgroundColor: Colors.black,
-            color: Colors.lightGreen.shade900,
-            activeColor: Colors.lightGreen.shade900,
-            tabBackgroundColor: Colors.grey.shade800,
+            color: Color(0xFF253622),
+            activeColor: Color(0xFF253622),
+            tabBackgroundColor: Colors.grey.shade900,
             padding: const EdgeInsets.all(16),
             gap: 8,
             tabs: [

@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:first_one/views/LogInScreen.dart';
 import 'dart:math';
@@ -13,34 +13,33 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _Animation;
+  late VideoPlayerController _controller;
 
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 3), // Duration of the animation
-    );
 
-    _Animation = Tween<double>(begin: 0.0, end: 2.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
-    );
+    _controller = VideoPlayerController.asset('assets/sp.mp4')
+      ..initialize().then((_) {
+        setState(() {});
+        _controller.setLooping(false);
+        _controller.play();
+      });
 
-    // Start the animations
-    _controller.forward();
-    Future.delayed(Duration(seconds: 5), () {
+    _controller.addListener(() {
+      if (_controller.value.isInitialized &&
+          !_controller.value.isPlaying &&
+          _controller.value.position >= _controller.value.duration) {
       Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                   builder: (context) => LogInScreen()), // Your LoginScreen
-            );
-          });
-
-
+      );
+      }
+    });
   }
+
 
   @override
   void dispose() {
@@ -67,26 +66,30 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     checkConction();
 
-    final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.black, // Background color of the splash screen
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // FadeTransition for logo (smaller size)
-            FadeTransition(
-              opacity: _Animation,
-              child: Image.asset(
-                'lib/images/logo.jpeg', // Logo image
-                height: 150, // Adjust height to make the logo smaller
-                width: 150, // Adjust width accordingly
+      body: _controller.value.isInitialized
+          ? Stack(
+        fit: StackFit.expand,
+        children: [
+          // Background Video
+          SizedBox.expand(
+            child: FittedBox(
+              fit: BoxFit.cover, // Ensures full-screen fill
+              child: SizedBox(
+                width: _controller.value.size.width,
+                height: _controller.value.size.height,
+                child: VideoPlayer(_controller),
               ),
             ),
-            // Circular motion for the wooden banner
-          ],
-        ),
-      ),
+          ),
+
+          // Optional: Black overlay to improve contrast
+          Container(
+            color: Colors.black.withOpacity(0.1), // Light overlay
+          ),
+        ],
+      )
+          : Center(child: CircularProgressIndicator()),
     );
   }
 }
