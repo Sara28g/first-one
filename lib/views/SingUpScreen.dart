@@ -15,7 +15,6 @@ Future insertUser(BuildContext context, User us) async {
   final response = await http.get(Uri.parse(serverPath + url));
   print(serverPath + url);
   //setState(() { });
-  Navigator.pop(context);
 }
 
 
