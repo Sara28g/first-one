@@ -1,29 +1,41 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_sliding_up_panel/flutter_sliding_up_panel.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-import '../Utils/client.dart';
-import '../Utils/db.dart';
+import 'dart:async';
 import '../models/UserModel.dart';
+import 'GameScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import '../Utils/client.dart';
 
 class HomePageScreen extends StatefulWidget {
-  const HomePageScreen({super.key, required this.title});
+  const HomePageScreen({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
   @override
-  State<HomePageScreen> createState() => HomepagescreenPageState();
+  State<HomePageScreen> createState() => HomePageScreenState();
 }
 
-class HomepagescreenPageState extends State<HomePageScreen> {
-  void _incrementCounter() {}
-  final _txtUserName = TextEditingController();
-  final _txtPassword = TextEditingController();
-  bool _isTextFieldVisible = false;
+class HomePageScreenState extends State<HomePageScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+  bool _showProfilePanel = false;
 
-  // Function to get users from API
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _printSharedPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    print("SharedPreferences contents:");
+    print("userID: ${prefs.getString('userID') ?? prefs.getInt('userID')}");
+    print("userName: ${prefs.getString('userName')}");
+    print("password: ${prefs.getString('password')}");
+  }
+
   Future<List<User>> getUsers() async {
     List<User> arr = [];
 
@@ -50,7 +62,7 @@ class HomepagescreenPageState extends State<HomePageScreen> {
         }
 
         String usersString = arr.map((user) =>
-        '${user.firstName}, ${user.lastName}, ${user.password}'
+        '${user.firstName}, ${user.lastName}, ${user.password},${user.Email}'
         ).join(', ');
         print("Formatted User List: $usersString");
       } else {
@@ -65,16 +77,17 @@ class HomepagescreenPageState extends State<HomePageScreen> {
 
 
 
-  late User _currUser = User(firstName: "", lastName: "", password: "");
+  late User _currUser = User(firstName: "", lastName: "", password: "",Email: "");
 
 
   Future<void> getDetails() async {
     try {
+      print("indetails");
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final int? userID = prefs.getInt('userID');
-
       var url = "profile/getMyDetails.php?userID=$userID";
       final response = await http.get(Uri.parse(serverPath + url));
+      print("url :" + serverPath + url);
 
       // Check if widget is still mounted before calling setState
       if (mounted && response.statusCode == 200) {
@@ -87,478 +100,471 @@ class HomepagescreenPageState extends State<HomePageScreen> {
     }
   }
 
+  @override
+  void initState() {
+    super.initState();
 
-
-
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+    _animation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    );
+    _animationController.forward();
+    getDetails();
+  }
 
   @override
   Widget build(BuildContext context) {
-
     getDetails();
-
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text(
-          'Home Page',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 30,
-          ),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: Row(
+          children: [
+            FadeTransition(
+              opacity: _animation,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.6),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Text(
+                  'PHYSICS & MATH',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.5,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-        backgroundColor: Color(0xFF252525),
-      ),
-      body: Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.all(32),
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/homepage.png'),
-            fit: BoxFit.cover, // Adjusts the image to cover the whole screen
+        actions: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _showProfilePanel = !_showProfilePanel;
+              });
+            },
+            child: Container(
+              margin: const EdgeInsets.only(right: 16),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.6),
+                shape: BoxShape.circle,
+              ),
+              padding: const EdgeInsets.all(8),
+              child: const Icon(Icons.person, color: Colors.white),
+            ),
           ),
-        ),
+        ],
       ),
-      //buttom
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Container(
-        margin: const EdgeInsets.only(top: 10),
-        height: 64,
-        width: 64,
-        child: FloatingActionButton(
-          backgroundColor: Colors.black,
-          elevation: 8,
-          onPressed: () => debugPrint(""),
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(width: 3, color: Color(0xFF253622)),
-            borderRadius: BorderRadius.circular(100),
+      body: Stack(
+        children: [
+          // Background
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/homepage.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
-          child:
-          const Icon(Icons.play_arrow_outlined, color: Color(0xFF253622)),
-        ),
-      ),
 
-      bottomNavigationBar: Container(
-        color: Colors.black,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
-          child: GNav(
-            backgroundColor: Colors.black,
-            color: Color(0xFF253622),
-            activeColor: Color(0xFF253622),
-            tabBackgroundColor: Colors.grey.shade900,
-            padding: const EdgeInsets.all(16),
-            gap: 8,
-            tabs: [
-              const GButton(
-                icon: Icons.home,
-                text: "Home",
+          // Animated gradient overlay
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0.7),
+                  Colors.black.withOpacity(0.3),
+                  Colors.transparent,
+                  Colors.black.withOpacity(0.8),
+                ],
               ),
-              GButton(
-                icon: Icons.settings,
-                text: "Settings",
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(20)),
-                    ),
-                    builder: (BuildContext context) {
-                      return DraggableScrollableSheet(
-                        initialChildSize: 0.2,
-                        minChildSize: 0.2,
-                        maxChildSize: 0.8,
-                        expand: false,
-                        builder: (BuildContext context,
-                            ScrollController scrollController) {
-                          return Container(
-                            decoration: const BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(16)),
-                            ),
-                            child: ListView(
-                              controller: scrollController,
-                              children: [
-                                ListTile(
-                                  leading:
-                                  const Icon(Icons.settings, color: Colors.white),
-                                  title: const Text("Settings",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 16)),
-                                  onTap: () {
-                                    // Perform action for Profile
-                                  },
-                                ),
-                                ListTile(
-                                  leading:
-                                  const Icon(Icons.person, color: Colors.white),
-                                  title: const Text(
-                                    "Profile",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      barrierColor: Colors.transparent,
-                                      isScrollControlled: true,
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(
-                                            top: Radius.circular(20)),
-                                      ),
-                                      builder: (BuildContext context) {
-                                        return DraggableScrollableSheet(
-                                          initialChildSize: 0.4,
-                                          minChildSize: 0.2,
-                                          maxChildSize: 0.8,
-                                          expand: false,
-                                          builder: (BuildContext context,
-                                              ScrollController
-                                              scrollController) {
-                                            return Container(
-                                              decoration: const BoxDecoration(
-                                                color: Colors.black,
-                                                borderRadius:
-                                                BorderRadius.vertical(
-                                                    top: Radius.circular(
-                                                        16)),
-                                              ),
-                                              child: ListView(
-                                                controller: scrollController,
-                                                children: [
-                                                  ListTile(
-                                                    leading: const Icon(
-                                                        Icons.account_circle,
-                                                        color: Colors.white),
-                                                    title: const Text("Profile",
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 16)),
-                                                    onTap: () {
-                                                      // Perform action for Profile
-                                                    },
-                                                  ),
-                                                  ListTile(
-                                                    title: Row(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                      children: [
-                                                        const Text(
-                                                          "    User Name:",
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 14,
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          _currUser.username ?? "Not available", // Use null-aware operator
-                                                          style: const TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 14,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    onTap: () {
-                                                      // Perform action for Notifications
-                                                    },
-                                                  ),
-                                                  ListTile(
-                                                    title: Row(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                      children: [
-                                                        const Text(
-                                                          "    First Name:",
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 14,
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          _currUser.firstName ?? "Not available", // Use null-aware operator
-                                                          style: const TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 14,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    onTap: () {
-                                                      // Perform action for Notifications
-                                                    },
-                                                  ),
-                                                  ListTile(
-                                                    title: Row(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                      children: [
-                                                        const Text(
-                                                          "    Last Name:",
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 12,
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          _currUser.lastName?? "Not available", // Use null-aware operator
-                                                          style: const TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 12,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    onTap: () {
-                                                      // Perform action for Notifications
-                                                    },
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      showModalBottomSheet(
-                                                        context: context,
-                                                        barrierColor:
-                                                        Colors.transparent,
-                                                        isScrollControlled:
-                                                        true,
-                                                        shape:
-                                                        const RoundedRectangleBorder(
-                                                          borderRadius:
-                                                          BorderRadius.vertical(
-                                                              top: Radius
-                                                                  .circular(
-                                                                  20)),
-                                                        ),
-                                                        builder: (BuildContext
-                                                        context) {
-                                                          return DraggableScrollableSheet(
-                                                            initialChildSize:
-                                                            0.4,
-                                                            minChildSize: 0.2,
-                                                            maxChildSize: 0.8,
-                                                            expand: false,
-                                                            builder: (BuildContext
-                                                            context,
-                                                                ScrollController
-                                                                scrollController) {
-                                                              return Container(
-                                                                decoration:
-                                                                const BoxDecoration(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  borderRadius:
-                                                                  BorderRadius.vertical(
-                                                                      top: Radius.circular(
-                                                                          16)),
-                                                                ),
-                                                                child: ListView(
-                                                                  controller:
-                                                                  scrollController,
-                                                                  children: [
-                                                                    ListTile(
-                                                                      leading: const Icon(
-                                                                          Icons
-                                                                              .edit,
-                                                                          color:
-                                                                          Colors.white),
-                                                                      title: const Text(
-                                                                          "Edit Profile",
-                                                                          style: TextStyle(
-                                                                              color: Colors.white,
-                                                                              fontSize: 16)),
-                                                                      onTap:
-                                                                          () {
-                                                                        // Perform action for Profile
-                                                                      },
-                                                                    ),
-                                                                    ListTile(
-                                                                      title: const Text(
-                                                                          "   Change UserName",
-                                                                          style: TextStyle(
-                                                                              color: Colors.white,
-                                                                              fontSize: 14)),
-                                                                      onTap:
-                                                                          () {
-                                                                        setState(
-                                                                                () {
-                                                                              _isTextFieldVisible =
-                                                                              !(_isTextFieldVisible);
-                                                                            });
-                                                                      },
-                                                                    ),
-                                                                    Visibility(
-                                                                      visible:
-                                                                      _isTextFieldVisible,
-                                                                      child:
-                                                                      Align(
-                                                                        alignment:
-                                                                        Alignment.center,
-                                                                        child: SizedBox(
-                                                                            height: 45,
-                                                                            width: 300,
-                                                                            child: TextField(
-                                                                              controller: _txtUserName,
-                                                                              decoration: const InputDecoration(
-                                                                                border: OutlineInputBorder(),
-                                                                                hintText: 'New UserName',
-                                                                              ),
-                                                                            )),
-                                                                      ),
-                                                                    ),
-                                                                    const SizedBox(
-                                                                        height:
-                                                                        4),
-                                                                    const SizedBox(
-                                                                        height:
-                                                                        8),
-                                                                  ],
-                                                                ),
-                                                              );
-                                                            },
-                                                          );
-                                                        },
-                                                      );
-                                                    },
-                                                    child: const Text(
-                                                      "Edit profile",
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 15,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      },
-                                    );
-                                  },
-                                ),
-                                ListTile(
-                                  leading: const Icon(Icons.play_arrow,
-                                      color: Colors.white),
-                                  title: const Text(
-                                    "Game",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    // Perform action for Notifications
-                                  },
-                                ),
-                                ListTile(
-                                  leading:
-                                  const Icon(Icons.logout, color: Colors.white),
-                                  title: const Text("Logout",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 12)),
-                                  onTap: () {
-                                    // Perform action for Logout
-                                  },
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  );
-                },
-              ),
-              const GButton(icon: Icons.play_arrow_outlined, text: "Play"),
-              GButton(
-                icon: Icons.add_chart_sharp,
-                text: "Chart",
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                    ),
-                    builder: (BuildContext context) {
-                      return DraggableScrollableSheet(
-                        initialChildSize: 0.4,
-                        minChildSize: 0.2,
-                        maxChildSize: 0.8,
-                        expand: false,
-                        builder: (BuildContext context, ScrollController scrollController) {
-                          return Container(
-                            decoration: const BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                            ),
-                            child: FutureBuilder<List<User>>(
-                              future: getUsers(),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                  return const Center(
-                                    child: CircularProgressIndicator(color: Colors.red),
-                                  );
-                                } else if (snapshot.hasError) {
-                                  return Center(
-                                    child: Text(
-                                      'Error: ${snapshot.error}',
-                                      style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
-                                    ),
-                                  );
-                                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                                  return const Center(
-                                    child: Text(
-                                      'No results',
-                                      style: TextStyle(fontSize: 23, color: Colors.white),
-                                    ),
-                                  );
-                                } else {
-                                  return ListView.builder(
-                                    controller: scrollController,
-                                    itemCount: snapshot.data!.length,
-                                    itemBuilder: (context, index) {
-                                      User user = snapshot.data![index];
-                                      return Card(
-                                        child: ListTile(
-                                          onTap: () {},
-                                          title: Text(
-                                            user.firstName ?? 'N/A',
-                                            style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black),
-                                          ),
-                                          subtitle: Text(
-                                            user.lastName ?? 'N/A',
-                                            style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  );
-                                }
-                              },
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  );
-                },
-              ),
-            ],
+            ),
           ),
-        ),
+
+          // Content
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 60),
+
+                  // Welcome message with animation
+                  FadeTransition(
+                    opacity: _animation,
+                    child: SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0, 0.3),
+                        end: Offset.zero,
+                      ).animate(_animation),
+                      child: Text(
+                        'Welcome, ${_currUser.firstName}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  // Subtitle with animation
+                  FadeTransition(
+                    opacity: _animation,
+                    child: SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0, 0.3),
+                        end: Offset.zero,
+                      ).animate(_animation),
+                      child: const Text(
+                        'Ready for a challenge?',
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const Spacer(),
+
+                  // Game description
+                  FadeTransition(
+                    opacity: _animation,
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.6),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.1),
+                          width: 1,
+                        ),
+                      ),
+                      child: const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'ESCAPE ROOM',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 2.0,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Solve physics and math puzzles to escape the room. Race against time and test your knowledge!',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 100),
+                ],
+              ),
+            ),
+          ),
+
+          // Play button
+          Positioned(
+            bottom: 40,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: FadeTransition(
+                opacity: _animation,
+                child: SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(0, 0.5),
+                    end: Offset.zero,
+                  ).animate(_animation),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  const GameScreen(),
+                          transitionsBuilder:
+                              (context, animation, secondaryAnimation, child) {
+                            return FadeTransition(
+                                opacity: animation, child: child);
+                          },
+                          transitionDuration: const Duration(milliseconds: 500),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: 180,
+                      height: 55,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF253622), Color(0xFF3B5432)],
+                        ),
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFF253622).withOpacity(0.6),
+                            blurRadius: 20,
+                            spreadRadius: 2,
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'PLAY NOW',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.5,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.play_arrow_rounded,
+                              color: Colors.white,
+                              size: 24,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          // Enhanced Profile panel (slide in from top)
+          if (_showProfilePanel)
+            Positioned(
+              top: MediaQuery.of(context).padding.top + kToolbarHeight,
+              right: 16,
+              child: TweenAnimationBuilder(
+                tween: Tween<double>(begin: 0, end: 1),
+                duration: const Duration(milliseconds: 300),
+                builder: (context, double value, child) {
+                  return Transform.scale(
+                    scale: value,
+                    child: Opacity(
+                      opacity: value,
+                      child: child,
+                    ),
+                  );
+                },
+                child: Container(
+                  width: 280,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.85),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Colors.white10,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.5),
+                        blurRadius: 10,
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'PROFILE',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.5,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _showProfilePanel = false;
+                              });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.close,
+                                color: Colors.white70,
+                                size: 16,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Center(
+                        child: Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF253622),
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white24, width: 2),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFF253622).withOpacity(0.5),
+                                blurRadius: 10,
+                                spreadRadius: 2,
+                              ),
+                            ],
+                          ),
+                          child: Center(
+                            child: Text(
+                              (_currUser.firstName?.isNotEmpty == true &&
+                                      _currUser.lastName?.isNotEmpty == true)
+                                  ? "${_currUser.firstName![0]}${_currUser.lastName![0]}"
+                                  : "?",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      // const SizedBox(height: 16),
+
+                      Center(
+                        child: Text(
+                          _currUser.userName ?? 'User',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.7),
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                       const SizedBox(height: 24),
+
+                      _buildProfileDetailRow(Icons.person_outline, "First Name",
+                          _currUser.firstName ?? "Not set"),
+                      _buildProfileDetailRow(Icons.person, "Last Name",
+                          _currUser.lastName ?? "Not set"),
+                      _buildProfileDetailRow(Icons.alternate_email, "Username",
+                          _currUser.userName ?? "Not set"),
+                      _buildProfileDetailRow(Icons.email_outlined, "Email",
+                          _currUser.Email ?? "Not set"),
+                      const SizedBox(height: 16),
+                      Container(
+                        height: 1,
+                        color: Colors.white10,
+                      ),
+                      const SizedBox(height: 16),
+                      GestureDetector(
+                        onTap: () {
+                          // Add logout functionality here
+                          setState(() {
+                            _showProfilePanel = false;
+                          });
+                        },
+                        child: const Row(
+                          children: [
+                            Icon(
+                              Icons.logout,
+                              color: Colors.white70,
+                              size: 16,
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              'Sign Out',
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  // Helper method to build profile detail rows
+  Widget _buildProfileDetailRow(IconData icon, String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            color: const Color(0xFF3B5432),
+            size: 16,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            "$label:",
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.6),
+              fontSize: 14,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              value,
+              style:  TextStyle(
+                color: Colors.white.withOpacity(0.6),
+                fontSize: 14,
+               fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.right,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       ),
     );
   }

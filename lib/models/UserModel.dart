@@ -1,7 +1,7 @@
 class User{
 
   int userID;
-  String username;
+  String userName;
   String firstName;
   String lastName;
   String password;
@@ -10,7 +10,7 @@ class User{
   User({
 
     this.userID=0,
-    this.username="",
+    this.userName="",
     this.firstName="",
     this.lastName="",
     this.password="",
@@ -20,7 +20,7 @@ class User{
 
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-    username: json["username"] ?? "",
+    userName: json["userName"] ?? "",
     firstName: json["firstName"] ?? "",
     lastName: json["lastName"] ?? "",
     password: json["password"] ?? "",
@@ -29,7 +29,7 @@ class User{
   );
 
   Map<String,dynamic> toJson() => {
-    "username": username,
+    "userName": userName,
     "firstName" :firstName,
     "lastName" :lastName,
     "password" :password,
