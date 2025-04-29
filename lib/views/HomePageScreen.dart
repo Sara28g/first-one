@@ -1,3 +1,4 @@
+import 'package:first_one/views/LogInScreen.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import '../models/UserModel.dart';
@@ -34,6 +35,57 @@ class HomePageScreenState extends State<HomePageScreen>
     print("userID: ${prefs.getString('userID') ?? prefs.getInt('userID')}");
     print("userName: ${prefs.getString('userName')}");
     print("password: ${prefs.getString('password')}");
+  }
+  Future<void> _logout() async {
+    try {
+      // Show loading indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF3B5432)),
+            ),
+          );
+        },
+      );
+
+      // Get SharedPreferences instance
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      // Clear all user-related data
+      await prefs.remove('userID');
+      await prefs.remove('userName');
+      await prefs.remove('password');
+      await prefs.remove('firstName');
+      await prefs.remove('lastName');
+      await prefs.remove('Email');
+
+      // For extra security, you can clear all preferences
+      // await prefs.clear();
+
+      // Close loading dialog
+      Navigator.of(context).pop();
+
+      // Navigate to login screen and remove all previous routes
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => LogInScreen()), // Replace with your actual login screen
+            (Route<dynamic> route) => false,
+      );
+
+    } catch (e) {
+      // Hide loading indicator if there's an error
+      Navigator.of(context).pop();
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error logging out: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      print('Error during logout: $e');
+    }
   }
 
   Future<List<User>> getUsers() async {
@@ -309,7 +361,7 @@ class HomePageScreenState extends State<HomePageScreen>
                         PageRouteBuilder(
                           pageBuilder:
                               (context, animation, secondaryAnimation) =>
-                                  const GameScreen(),
+                                  GameScreen(),
                           transitionsBuilder:
                               (context, animation, secondaryAnimation, child) {
                             return FadeTransition(
@@ -499,6 +551,7 @@ class HomePageScreenState extends State<HomePageScreen>
                       const SizedBox(height: 16),
                       GestureDetector(
                         onTap: () {
+                          _logout();
                           // Add logout functionality here
                           setState(() {
                             _showProfilePanel = false;

@@ -7,21 +7,21 @@ class GameScreen extends StatefulWidget {
   const GameScreen({Key? key}) : super(key: key);
 
   @override
-  State<GameScreen> createState() => _GameScreenState();
+  State<GameScreen> createState() => GameScreenState();
 }
 
-class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
-  bool _isLaunching = true;
-  String _statusMessage = 'Starting Escape Room game...';
-  bool _gameWasLaunched = false;
+class GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
+  bool isLaunching = true;
+  String statusMessage = 'Starting Escape Room game...';
+  bool gameWasLaunched = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    // Use a delay to ensure the widget is fully built
+// Use a delay to ensure the widget is fully built
     Future.delayed(const Duration(milliseconds: 500), () {
-      _launchGodotGame();
+      launchGodotGame();
     });
   }
 
@@ -31,24 +31,25 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  // This will be called when the app returns to the foreground
+// This will be called when the app returns to the foreground
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed && _gameWasLaunched) {
-      // The app has returned to the foreground, likely because the Godot game was closed
-      // Navigate back to home page
+    if (state == AppLifecycleState.resumed && gameWasLaunched) {
+// The app has returned to the foreground, likely because the Godot game was closed
+// Navigate back to home page
       if (mounted) {
         Navigator.of(context).pop();
       }
     }
   }
 
-  Future<void> _launchGodotGame() async {
+  Future<void> launchGodotGame() async {
     if (Platform.isAndroid) {
-      // Android intent format for opening apps
+// Android intent format for opening apps
       final Uri uri = Uri.parse('android-app://com.sara.escaperoom');
-      // Alternative approach using market URI
-      final Uri marketUri = Uri.parse('market://details?id=com.sara.escaperoom');
+// Alternative approach using market URI
+      final Uri marketUri =
+          Uri.parse('market://details?id=com.sara.escaperoom');
 
       try {
         bool launched = await launchUrl(
@@ -57,7 +58,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         );
 
         if (!launched) {
-          // Try alternative launch method
+// Try alternative launch method
           launched = await launchUrl(
             marketUri,
             mode: LaunchMode.externalApplication,
@@ -68,25 +69,26 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
           }
         }
 
-        // Mark that we successfully launched the game
-        _gameWasLaunched = true;
+// Mark that we successfully launched the game
+        gameWasLaunched = true;
 
-        // We don't immediately pop - instead we'll wait for the app to return to foreground
+// We don't immediately pop - instead we'll wait for the app to return to foreground
         setState(() {
-          _isLaunching = false;
-          _statusMessage = 'Game launched. Close the game to return here.';
+          isLaunching = false;
+          statusMessage = 'Game launched. Close the game to return here.';
         });
       } catch (e) {
         setState(() {
-          _isLaunching = false;
-          _statusMessage = 'Error launching game: $e\nMake sure the app is installed.';
+          isLaunching = false;
+          statusMessage =
+              'Error launching game: $e\nMake sure the app is installed.';
         });
         print('Error launching app: $e');
       }
     } else {
       setState(() {
-        _isLaunching = false;
-        _statusMessage = 'This feature is only available on Android';
+        isLaunching = false;
+        statusMessage = 'This feature is only available on Android';
       });
     }
   }
@@ -99,7 +101,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-           /* if (_isLaunching) const CircularProgressIndicator(),
+/* if (*isLaunching) const CircularProgressIndicator(),
             const SizedBox(height: 20),
             Text(_statusMessage),
             const SizedBox(height: 20),
@@ -107,22 +109,10 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
               ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    _isLaunching = true;
-                    _statusMessage = 'Starting Escape Room game...';
+                    *isLaunching = true;
+                    *statusMessage = 'Starting Escape Room game...';
                   });
-                  _launchGodotGame();
-                },
-                child: const Text('Try Again'),
-              ),
-            if (_gameWasLaunched)
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Return to Menu'),
-              ),
-
-            */
+                  launchGodotGame();                 },                 child: const Text('Try Again'),               ),             if (gameWasLaunched)               ElevatedButton(                 onPressed: () {                   Navigator.of(context).pop();                 },                 child: const Text('Return to Menu'),               ),              */
           ],
         ),
       ),
