@@ -13,7 +13,8 @@ class LogInScreen extends StatefulWidget {
   _LogInScreenState createState() => _LogInScreenState();
 }
 
-class _LogInScreenState extends State<LogInScreen> with SingleTickerProviderStateMixin {
+class _LogInScreenState extends State<LogInScreen>
+    with SingleTickerProviderStateMixin {
   final _txtEmail = TextEditingController();
   final _txtPassword = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -55,17 +56,15 @@ class _LogInScreenState extends State<LogInScreen> with SingleTickerProviderStat
   Future<void> fillSavedPars() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    // Use getString() instead of get() and provide empty string as default
     _txtEmail.text = prefs.getString("Email") ?? "";
     _txtPassword.text = prefs.getString("password") ?? "";
 
-    // Only try to log in if both fields have values
+    // Only log in if both fields have values
     if (_txtEmail.text.isNotEmpty && _txtPassword.text.isNotEmpty) {
-   //   checklogin(context);
+      //   checklogin(context);
     }
   }
 
-  // Custom notification overlay
   void _showCustomNotification(String message, bool isSuccess) {
     showDialog(
       context: context,
@@ -74,7 +73,7 @@ class _LogInScreenState extends State<LogInScreen> with SingleTickerProviderStat
         return Dialog(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          insetPadding: EdgeInsets.zero, // Removes default padding
+          insetPadding: EdgeInsets.zero,
           child: Stack(
             children: [
               Positioned(
@@ -82,7 +81,8 @@ class _LogInScreenState extends State<LogInScreen> with SingleTickerProviderStat
                 left: 20,
                 right: 20,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   decoration: BoxDecoration(
                     color: isSuccess
                         ? const Color(0xFF253622).withOpacity(0.95)
@@ -106,7 +106,9 @@ class _LogInScreenState extends State<LogInScreen> with SingleTickerProviderStat
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        isSuccess ? Icons.check_circle_outline : Icons.error_outline,
+                        isSuccess
+                            ? Icons.check_circle_outline
+                            : Icons.error_outline,
                         color: isSuccess ? Colors.green[300] : Colors.red[300],
                       ),
                       const SizedBox(width: 12),
@@ -129,8 +131,7 @@ class _LogInScreenState extends State<LogInScreen> with SingleTickerProviderStat
       },
     );
 
-
-  // Only auto-dismiss if not a success notification that will be followed by navigation
+    //  if not a success messege  will be show by navigation
     if (!isSuccess || !message.contains("Login successful")) {
       Future.delayed(const Duration(seconds: 2), () {
         if (Navigator.canPop(context)) {
@@ -168,7 +169,7 @@ class _LogInScreenState extends State<LogInScreen> with SingleTickerProviderStat
           await prefs.setString('fullName',
               checkloginModel.fromJson(jsonDecode(response.body)).fullName!);
 
-          // Show notification at the bottom of the screen
+          // Shows messege
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Row(
@@ -192,21 +193,21 @@ class _LogInScreenState extends State<LogInScreen> with SingleTickerProviderStat
             ),
           );
 
-          // Add a delay to show notification before navigation
+          // a delay to show messege before navigation
           await Future.delayed(const Duration(milliseconds: 2000));
 
-          // Use pushAndRemoveUntil to clear the navigation stack
           Navigator.pushAndRemoveUntil(
             context,
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) =>
                   HomePageScreen(title: "Home"),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
                 return FadeTransition(opacity: animation, child: child);
               },
               transitionDuration: const Duration(milliseconds: 500),
             ),
-                (route) => false, // This will remove all previous routes
+            (route) => false, // remove all previous routes
           );
         }
       } else {
@@ -329,9 +330,9 @@ class _LogInScreenState extends State<LogInScreen> with SingleTickerProviderStat
 
                       const SizedBox(height: 40),
 
-                      // Login form container with animation
+
                       FadeTransition(
-                        opacity: _fadeAnimation,
+                        opacity: _fadeAnimation, // Login form container with animation
                         child: SlideTransition(
                           position: Tween<Offset>(
                             begin: const Offset(0, 0.2),
@@ -444,7 +445,8 @@ class _LogInScreenState extends State<LogInScreen> with SingleTickerProviderStat
                                       ),
                                       onPressed: () {
                                         setState(() {
-                                          _isPasswordVisible = !_isPasswordVisible;
+                                          _isPasswordVisible =
+                                              !_isPasswordVisible;
                                         });
                                       },
                                     ),
@@ -466,54 +468,57 @@ class _LogInScreenState extends State<LogInScreen> with SingleTickerProviderStat
                                 // Login button
                                 _isLoading
                                     ? const CircularProgressIndicator(
-                                  color: Color(0xFF3B5432),
-                                )
+                                        color: Color(0xFF3B5432),
+                                      )
                                     : Container(
-                                  width: double.infinity,
-                                  height: 55,
-                                  decoration: BoxDecoration(
-                                    gradient: const LinearGradient(
-                                      colors: [
-                                        Color(0xFF253622),
-                                        Color(0xFF3B5432),
-                                      ],
-                                    ),
-                                    borderRadius: BorderRadius.circular(30),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: const Color(0xFF253622)
-                                            .withOpacity(0.6),
-                                        blurRadius: 15,
-                                        spreadRadius: 1,
+                                        width: double.infinity,
+                                        height: 55,
+                                        decoration: BoxDecoration(
+                                          gradient: const LinearGradient(
+                                            colors: [
+                                              Color(0xFF253622),
+                                              Color(0xFF3B5432),
+                                            ],
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: const Color(0xFF253622)
+                                                  .withOpacity(0.6),
+                                              blurRadius: 15,
+                                              spreadRadius: 1,
+                                            ),
+                                          ],
+                                        ),
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            if (_formKey.currentState!
+                                                .validate()) {
+                                              // Hide keyboard
+                                              FocusScope.of(context).unfocus();
+                                              checklogin(context);
+                                            }
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.transparent,
+                                            shadowColor: Colors.transparent,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                            ),
+                                          ),
+                                          child: const Text(
+                                            'SIGN IN',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              letterSpacing: 1.5,
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    ],
-                                  ),
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      if (_formKey.currentState!.validate()) {
-                                        // Hide keyboard
-                                        FocusScope.of(context).unfocus();
-                                        checklogin(context);
-                                      }
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.transparent,
-                                      shadowColor: Colors.transparent,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(30),
-                                      ),
-                                    ),
-                                    child: const Text(
-                                      'SIGN IN',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        letterSpacing: 1.5,
-                                      ),
-                                    ),
-                                  ),
-                                ),
 
                                 const SizedBox(height: 24),
 
@@ -543,12 +548,19 @@ class _LogInScreenState extends State<LogInScreen> with SingleTickerProviderStat
                                         Navigator.push(
                                           context,
                                           PageRouteBuilder(
-                                            pageBuilder: (context, animation, secondaryAnimation) =>
-                                            const SingUpScreen(title: ""),
-                                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                              return FadeTransition(opacity: animation, child: child);
+                                            pageBuilder: (context, animation,
+                                                    secondaryAnimation) =>
+                                                const SingUpScreen(title: ""),
+                                            transitionsBuilder: (context,
+                                                animation,
+                                                secondaryAnimation,
+                                                child) {
+                                              return FadeTransition(
+                                                  opacity: animation,
+                                                  child: child);
                                             },
-                                            transitionDuration: const Duration(milliseconds: 500),
+                                            transitionDuration: const Duration(
+                                                milliseconds: 500),
                                           ),
                                         );
                                       },
@@ -594,7 +606,8 @@ class _LogInScreenState extends State<LogInScreen> with SingleTickerProviderStat
             ),
             decoration: BoxDecoration(
               color: Colors.black.withOpacity(0.85),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(20)),
               border: Border.all(
                 color: Colors.white.withOpacity(0.1),
                 width: 1,
@@ -680,63 +693,63 @@ class _LogInScreenState extends State<LogInScreen> with SingleTickerProviderStat
                     ),
                     const SizedBox(height: 24),
                     _isProcessing
-                        ? const CircularProgressIndicator(color: Color(0xFF3B5432))
+                        ? const CircularProgressIndicator(
+                            color: Color(0xFF3B5432))
                         : Container(
-                      width: double.infinity,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF253622), Color(0xFF3B5432)],
-                        ),
-                        borderRadius: BorderRadius.circular(25),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFF253622).withOpacity(0.6),
-                            blurRadius: 15,
-                            spreadRadius: 1,
+                            width: double.infinity,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFF253622), Color(0xFF3B5432)],
+                              ),
+                              borderRadius: BorderRadius.circular(25),
+                              boxShadow: [
+                                BoxShadow(
+                                  color:
+                                      const Color(0xFF253622).withOpacity(0.6),
+                                  blurRadius: 15,
+                                  spreadRadius: 1,
+                                ),
+                              ],
+                            ),
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                if (_formKey2.currentState!.validate()) {
+                                  setState(() {
+                                    _isProcessing = true;
+                                  });
+
+                                  await Future.delayed(
+                                      const Duration(seconds: 2));
+
+                                  setState(() {
+                                    _isProcessing = false;
+                                  });
+
+                                  Navigator.pop(context); // Close the modal
+                                  _showCustomNotification(
+                                    "Password reset link sent to ${_forgotEmailController.text}", // shows a proper notification
+                                    true,
+                                  );
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
+                              ),
+                              child: const Text(
+                                "SEND RESET LINK",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1,
+                                ),
+                              ),
+                            ),
                           ),
-                        ],
-                      ),
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          if (_formKey2.currentState!.validate()) {
-                            setState(() {
-                              _isProcessing = true;
-                            });
-
-                            // Simulate API call
-                            await Future.delayed(const Duration(seconds: 2));
-
-                            setState(() {
-                              _isProcessing = false;
-                            });
-
-                            Navigator.pop(context); // Close the modal
-
-                            // Show custom notification instead of SnackBar
-                            _showCustomNotification(
-                              "Password reset link sent to ${_forgotEmailController.text}",
-                              true,
-                            );
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          shadowColor: Colors.transparent,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
-                          ),
-                        ),
-                        child: const Text(
-                          "SEND RESET LINK",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1,
-                          ),
-                        ),
-                      ),
-                    ),
                     const SizedBox(height: 16),
                   ],
                 ),
@@ -750,11 +763,10 @@ class _LogInScreenState extends State<LogInScreen> with SingleTickerProviderStat
 }
 
 bool isValidEmail(String email) {
-  // Define the email validation RegExp
+  //checks if the email that the user interted is valid
   final RegExp emailRegex = RegExp(
     r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
   );
 
-  // Return whether the input matches the RegExp
   return emailRegex.hasMatch(email);
 }

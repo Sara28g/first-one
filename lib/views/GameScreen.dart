@@ -58,7 +58,7 @@ class GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         );
 
         if (!launched) {
-// Try alternative launch method
+//alternative launch method
           launched = await launchUrl(
             marketUri,
             mode: LaunchMode.externalApplication,
@@ -69,10 +69,10 @@ class GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
           }
         }
 
-// Mark that we successfully launched the game
+//launched the game
         gameWasLaunched = true;
 
-// We don't immediately pop - instead we'll wait for the app to return to foreground
+// wait for the app to return to foreground
         setState(() {
           isLaunching = false;
           statusMessage = 'Game launched. Close the game to return here.';
